@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Přihlášení')}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-7 col-lg-5">
+
+            <div class="text-center mb-4">
+                <div class="display-3 mb-2">🍦</div>
+                <h2 class="fw-bold">Přihlásit se</h2>
+                <p class="text-muted">Přihlaste se ke svému účtu</p>
+            </div>
+
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <div th:if="${param.error}" class="alert alert-danger rounded-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        Nesprávné uživatelské jméno nebo heslo.
+                    </div>
+                    <div th:if="${param.logout}" class="alert alert-success rounded-3">
+                        <i class="bi bi-check-circle me-2"></i>
+                        Byli jste úspěšně odhlášeni.
+                    </div>
+                    <div th:if="${success}" class="alert alert-success rounded-3">
+                        <i class="bi bi-check-circle me-2"></i>
+                        <span th:text="${success}"></span>
+                    </div>
+
+                    <form th:action="@{/login}" method="post">
+                        <div class="mb-3">
+                            <label for="username" class="form-label fw-semibold">Uživatelské jméno</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-ice-soft border-0">
+                                    <i class="bi bi-person text-ice"></i>
+                                </span>
+                                <input type="text" id="username" name="username"
+                                       class="form-control border-0 bg-light" required
+                                       placeholder="Zadejte uživatelské jméno">
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label for="password" class="form-label fw-semibold">Heslo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-ice-soft border-0">
+                                    <i class="bi bi-lock text-ice"></i>
+                                </span>
+                                <input type="password" id="password" name="password"
+                                       class="form-control border-0 bg-light" required
+                                       placeholder="Zadejte heslo">
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-ice w-100 btn-lg rounded-pill mb-3">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Přihlásit se
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Nemáte účet?
+                            <a th:href="@{/register}" class="text-ice fw-semibold text-decoration-none">
+                                Zaregistrujte se
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-3 border-0 bg-light rounded-3">
+                <div class="card-body p-3">
+                    <small class="text-muted">
+                        <i class="bi bi-info-circle me-1"></i>
+                        <strong>Testovací účty:</strong>
+                        Admin: <code>admin / admin123</code> &nbsp;|&nbsp;
+                        Uživatel: <code>jan / jan123</code>
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

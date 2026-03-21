@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Registrace')}"></head>
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+    <div class="row justify-content-center">
+        <div class="col-sm-10 col-md-8 col-lg-6">
+
+            <div class="text-center mb-4">
+                <div class="display-3 mb-2">🍨</div>
+                <h2 class="fw-bold">Nový účet</h2>
+                <p class="text-muted">Registrujte se a sledujte své objednávky</p>
+            </div>
+
+            <div class="card shadow border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+
+                    <div th:if="${error}" class="alert alert-danger rounded-3">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <span th:text="${error}"></span>
+                    </div>
+
+                    <form th:action="@{/register}" method="post">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Jméno *</label>
+                                <input type="text" name="firstName" class="form-control" required placeholder="Jan">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Příjmení *</label>
+                                <input type="text" name="lastName" class="form-control" required placeholder="Novák">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">E-mail *</label>
+                                <input type="email" name="email" class="form-control" required placeholder="jan@example.cz">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Uživatelské jméno *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-ice-soft border-0">
+                                        <i class="bi bi-person text-ice"></i>
+                                    </span>
+                                    <input type="text" name="username" class="form-control border-0 bg-light"
+                                           required minlength="3" placeholder="Minimálně 3 znaky">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Heslo *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-ice-soft border-0">
+                                        <i class="bi bi-lock text-ice"></i>
+                                    </span>
+                                    <input type="password" name="password" class="form-control border-0 bg-light"
+                                           required minlength="4" placeholder="Min. 4 znaky">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Heslo znovu *</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-ice-soft border-0">
+                                        <i class="bi bi-lock-fill text-ice"></i>
+                                    </span>
+                                    <input type="password" name="passwordConfirm" class="form-control border-0 bg-light"
+                                           required placeholder="Zopakujte heslo">
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-ice w-100 btn-lg rounded-pill mt-4 mb-3">
+                            <i class="bi bi-person-plus me-2"></i>Zaregistrovat se
+                        </button>
+                    </form>
+
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Již máte účet?
+                            <a th:href="@{/login}" class="text-ice fw-semibold text-decoration-none">
+                                Přihlaste se
+                            </a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Pokladna')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+    <h1 class="fw-bold mb-2"><i class="bi bi-credit-card me-2"></i>Pokladna</h1>
+    <p class="text-muted mb-5">Zadejte své kontaktní údaje pro dokončení objednávky.</p>
+
+    <div class="row g-5">
+        <!-- Form -->
+        <div class="col-lg-7">
+            <form th:action="@{/order/checkout}" method="post" th:object="${customerDetails}">
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="fw-bold mb-0"><i class="bi bi-person me-2 text-ice"></i>Kontaktní údaje</h5>
+                            <button th:if="${loggedUser != null}" type="button"
+                                    class="btn btn-outline-ice btn-sm rounded-pill"
+                                    th:data-firstname="${loggedUser.firstName}"
+                                    th:data-lastname="${loggedUser.lastName}"
+                                    th:data-email="${loggedUser.email}"
+                                    onclick="prefillFromAccount(this)">
+                                <i class="bi bi-person-check me-1"></i>Předvyplnit z účtu
+                            </button>
+                        </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Jméno *</label>
+                                <input type="text" th:field="*{firstName}" class="form-control" required placeholder="Jan">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Příjmení *</label>
+                                <input type="text" th:field="*{lastName}" class="form-control" required placeholder="Novák">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">E-mail *</label>
+                                <input type="email" th:field="*{email}" class="form-control" required placeholder="jan@example.cz">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold">Telefon *</label>
+                                <input type="tel" th:field="*{phone}" class="form-control" required placeholder="+420 777 123 456">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-4"><i class="bi bi-geo-alt me-2 text-ice"></i>Adresa vyzvednutí</h5>
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-info-circle me-1"></i>
+                            Vaši objednávku si vyzvedněte přímo v naší zmrzlinárně.
+                        </p>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Ulice a číslo popisné</label>
+                                <input type="text" th:field="*{address}" class="form-control" placeholder="Václavské náměstí 1">
+                            </div>
+                            <div class="col-md-8">
+                                <label class="form-label fw-semibold">Město</label>
+                                <input type="text" th:field="*{city}" class="form-control" placeholder="Praha">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-semibold">PSČ</label>
+                                <input type="text" th:field="*{zipCode}" class="form-control" placeholder="110 00">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-chat-left-text me-2 text-ice"></i>Poznámka</h5>
+                        <textarea th:field="*{note}" class="form-control" rows="3"
+                                  placeholder="Případné poznámky k objednávce..."></textarea>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-3">
+                    <a th:href="@{/cart}" class="btn btn-outline-secondary rounded-pill px-4">
+                        <i class="bi bi-arrow-left me-2"></i>Zpět do košíku
+                    </a>
+                    <button type="submit" class="btn btn-ice btn-lg rounded-pill px-5 flex-grow-1">
+                        <i class="bi bi-check-circle me-2"></i>Potvrdit objednávku
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Order summary -->
+        <div class="col-lg-5">
+            <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 80px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Vaše objednávka</h5>
+                    <div th:if="${!cartItems.empty}">
+                        <p class="text-muted small mb-3">
+                            <i class="bi bi-shop me-1"></i>
+                            <span th:text="${cartItems[0].shopName}">Zmrzlinárna</span>
+                        </p>
+                        <div th:each="item : ${cartItems}" class="d-flex justify-content-between mb-2">
+                            <span th:text="${item.productName} + ' × ' + ${item.quantity}">Položka</span>
+                            <span class="fw-semibold" th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' Kč'">0 Kč</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold fs-5 mb-3">
+                            <span>Celkem k platbě</span>
+                            <span class="text-ice" th:text="${#numbers.formatDecimal(total, 1, 2)} + ' Kč'">0 Kč</span>
+                        </div>
+                        <div class="alert alert-light border rounded-3 small mb-0">
+                            <i class="bi bi-info-circle me-2 text-ice"></i>
+                            Platba probíhá <strong>při vyzvednutí</strong> v naší zmrzlinárně.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+<script>
+function prefillFromAccount(btn) {
+    document.getElementById('firstName').value = btn.dataset.firstname || '';
+    document.getElementById('lastName').value  = btn.dataset.lastname  || '';
+    document.getElementById('email').value     = btn.dataset.email     || '';
+}
+</script>
+</body>
+</html>

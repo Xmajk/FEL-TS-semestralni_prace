@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Vyberte zmrzlinárnu')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<!-- Hero -->
+<section class="hero-section text-center py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="display-1 mb-3">🍦🍨🍧</div>
+                <h1 class="display-5 fw-bold text-white mb-3">Vítejte v ZmrzlinaShop!</h1>
+                <p class="lead text-white-75 mb-4">
+                    Vyberte si svou oblíbenou zmrzlinárnu a objednejte si čerstvou zmrzlinu online.
+                    Rychle, jednoduše, s láskou.
+                </p>
+                <a href="#shops" class="btn btn-light btn-lg px-4 rounded-pill shadow">
+                    <i class="bi bi-chevron-down me-2"></i>Prohlédnout zmrzlinárny
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Flash messages -->
+<div class="container mt-3">
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+</div>
+
+<!-- Shops -->
+<main id="shops" class="container py-5 flex-grow-1">
+    <h2 class="text-center fw-bold mb-2">Naše zmrzlinárny</h2>
+    <p class="text-center text-muted mb-5">Vyberte pobočku a prohlédněte si aktuální nabídku</p>
+
+    <div th:if="${shops.empty}" class="text-center py-5">
+        <div class="display-1 mb-3">😔</div>
+        <h4>Momentálně není k dispozici žádná zmrzlinárna.</h4>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-xl-3" th:each="shop : ${shops}">
+            <div class="card shop-card h-100 shadow-sm">
+                <div class="card-body d-flex flex-column text-center p-4">
+                    <div class="shop-emoji mb-3" th:text="${shop.imageEmoji}">🍦</div>
+                    <h5 class="card-title fw-bold" th:text="${shop.name}">Název</h5>
+                    <p class="text-muted small mb-1">
+                        <i class="bi bi-geo-alt me-1"></i>
+                        <span th:text="${shop.address + ', ' + shop.city}">Adresa</span>
+                    </p>
+                    <p class="card-text text-muted flex-grow-1 mt-2" th:text="${shop.description}">Popis</p>
+                    <a th:href="@{/shop/{id}(id=${shop.id})}" class="btn btn-ice mt-3 rounded-pill">
+                        <i class="bi bi-arrow-right-circle me-2"></i>Prohlédnout nabídku
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Features -->
+<section class="bg-light py-5">
+    <div class="container">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-3">
+                    <div class="display-4 mb-2">🚀</div>
+                    <h5 class="fw-bold">Rychlá objednávka</h5>
+                    <p class="text-muted">Objednejte si zmrzlinu za pár kliknutí bez zbytečného čekání.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <div class="display-4 mb-2">✅</div>
+                    <h5 class="fw-bold">Vždy čerstvé</h5>
+                    <p class="text-muted">Každá zmrzlina je připravena z čerstvých lokálních surovin.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <div class="display-4 mb-2">💳</div>
+                    <h5 class="fw-bold">Snadná platba</h5>
+                    <p class="text-muted">Plaťte při vyzvednutí v naší zmrzlinárně.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

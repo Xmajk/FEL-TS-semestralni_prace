@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Admin — Objednávky')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm rounded-4 sticky-top" style="top: 80px;">
+                <div class="card-body p-3">
+                    <h6 class="text-muted small fw-bold text-uppercase px-2 mb-3">Admin panel</h6>
+                    <nav class="nav flex-column gap-1">
+                        <a th:href="@{/admin}" class="nav-link admin-nav rounded-3 px-3 py-2">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                        <a th:href="@{/admin/shops}" class="nav-link admin-nav rounded-3 px-3 py-2">
+                            <i class="bi bi-shop me-2"></i>Zmrzlinárny
+                        </a>
+                        <a th:href="@{/admin/products}" class="nav-link admin-nav rounded-3 px-3 py-2">
+                            <i class="bi bi-grid me-2"></i>Produkty
+                        </a>
+                        <a th:href="@{/admin/orders}" class="nav-link admin-nav active rounded-3 px-3 py-2">
+                            <i class="bi bi-receipt me-2"></i>Objednávky
+                        </a>
+                        <hr class="my-2">
+                        <a th:href="@{/}" class="nav-link admin-nav rounded-3 px-3 py-2 text-muted">
+                            <i class="bi bi-arrow-left me-2"></i>Zpět na web
+                        </a>
+                    </nav>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-10">
+            <h2 class="fw-bold mb-4">Objednávky</h2>
+
+            <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3">
+                <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
+            <div th:if="${orders.empty}" class="text-center py-5 text-muted">
+                <i class="bi bi-receipt fs-1 mb-3 d-block"></i>Zatím žádné objednávky.
+            </div>
+
+            <div th:each="order : ${orders}" class="card border-0 shadow-sm rounded-4 mb-3">
+                <div class="card-body p-4">
+                    <div class="row align-items-start">
+                        <div class="col-md-6">
+                            <div class="d-flex align-items-center gap-3 mb-2">
+                                <h6 class="fw-bold mb-0" th:text="${order.shopName}">Zmrzlinárna</h6>
+                                <span class="badge rounded-pill"
+                                      th:classappend="${order.status == 'CONFIRMED'} ? 'bg-success' : (${order.status == 'READY'} ? 'bg-primary' : 'bg-danger')"
+                                      th:text="${order.status}">Status</span>
+                            </div>
+                            <p class="text-muted small mb-2">
+                                <i class="bi bi-calendar me-1"></i>
+                                <span th:text="${order.createdAt}">Datum</span>
+                                &nbsp;|&nbsp;
+                                <code class="small" th:text="${#strings.abbreviate(order.id, 20)}">ID</code>
+                            </p>
+                            <div th:if="${order.customerDetails != null}">
+                                <p class="mb-1 small">
+                                    <i class="bi bi-person me-1"></i>
+                                    <strong th:text="${order.customerDetails.firstName + ' ' + order.customerDetails.lastName}">Jméno</strong>
+                                    — <span th:text="${order.customerDetails.email}">Email</span>
+                                    — <span th:text="${order.customerDetails.phone}">Telefon</span>
+                                </p>
+                            </div>
+                            <div class="mt-2">
+                                <span th:each="item : ${order.items}" class="badge bg-light text-dark me-1 border">
+                                    <span th:text="${item.productName} + ' ×' + ${item.quantity}">Položka</span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-3 mt-3 mt-md-0">
+                            <p class="text-muted small mb-1">Celkem k platbě</p>
+                            <div class="fw-bold text-ice fs-5"
+                                 th:text="${#numbers.formatDecimal(order.totalPrice, 1, 2)} + ' Kč'">0 Kč</div>
+                            <small class="text-muted" th:text="${order.userId != null} ? 'Registrovaný zákazník: ' + ${order.userId} : 'Host'">
+                                Uživatel
+                            </small>
+                        </div>
+                        <div class="col-md-3 mt-3 mt-md-0">
+                            <form th:action="@{/admin/orders/status/{id}(id=${order.id})}" method="post">
+                                <label class="form-label small fw-semibold text-muted">Změnit status</label>
+                                <div class="input-group input-group-sm">
+                                    <select name="status" class="form-select">
+                                        <option value="CONFIRMED" th:selected="${order.status == 'CONFIRMED'}">CONFIRMED</option>
+                                        <option value="READY" th:selected="${order.status == 'READY'}">READY</option>
+                                        <option value="CANCELLED" th:selected="${order.status == 'CANCELLED'}">CANCELLED</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-outline-secondary">
+                                        <i class="bi bi-check"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

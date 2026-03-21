@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Košík')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+    <h1 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Košík</h1>
+
+    <!-- Flash messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Empty cart -->
+    <div th:if="${cartItems.empty}" class="text-center py-5">
+        <div class="display-1 mb-3">🛒</div>
+        <h4 class="text-muted mb-4">Váš košík je prázdný.</h4>
+        <a th:href="@{/}" class="btn btn-ice btn-lg rounded-pill px-4">
+            <i class="bi bi-shop me-2"></i>Prohlédnout zmrzlinárny
+        </a>
+    </div>
+
+    <!-- Cart with items -->
+    <div th:if="${!cartItems.empty}" class="row g-4">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-semibold">
+                            <i class="bi bi-shop me-2 text-ice"></i>
+                            <span th:text="${cartItems[0].shopName}">Zmrzlinárna</span>
+                        </h5>
+                        <form th:action="@{/cart/clear}" method="post">
+                            <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">
+                                <i class="bi bi-trash me-1"></i>Vyprázdnit
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                <div class="card-body px-4">
+                    <div th:each="item, iterStat : ${cartItems}" class="cart-item py-3"
+                         th:classappend="${!iterStat.last} ? 'border-bottom' : ''">
+                        <div class="row align-items-center">
+                            <div class="col">
+                                <h6 class="mb-1 fw-semibold" th:text="${item.productName}">Produkt</h6>
+                                <small class="text-muted" th:text="${#numbers.formatDecimal(item.price, 1, 2)} + ' Kč / ks'">0 Kč / ks</small>
+                            </div>
+                            <div class="col-auto">
+                                <form th:action="@{/cart/update/{id}(id=${item.productId})}" method="post"
+                                      class="d-flex align-items-center gap-2">
+                                    <input type="number" name="quantity" min="1" max="99"
+                                           th:value="${item.quantity}"
+                                           class="form-control form-control-sm text-center"
+                                           style="width: 65px;"
+                                           onchange="this.form.submit()">
+                                </form>
+                            </div>
+                            <div class="col-auto text-end" style="min-width: 90px;">
+                                <span class="fw-bold text-ice" th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' Kč'">0 Kč</span>
+                            </div>
+                            <div class="col-auto">
+                                <form th:action="@{/cart/remove/{id}(id=${item.productId})}" method="post">
+                                    <button type="submit" class="btn btn-link text-danger p-0" title="Odebrat">
+                                        <i class="bi bi-x-circle fs-5"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order summary -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 80px;">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-4">Shrnutí objednávky</h5>
+
+                    <div th:each="item : ${cartItems}" class="d-flex justify-content-between mb-2 small">
+                        <span class="text-muted" th:text="${item.productName} + ' × ' + ${item.quantity}">Položka</span>
+                        <span th:text="${#numbers.formatDecimal(item.subtotal, 1, 2)} + ' Kč'">0 Kč</span>
+                    </div>
+
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                        <span>Celkem</span>
+                        <span class="text-ice" th:text="${#numbers.formatDecimal(total, 1, 2)} + ' Kč'">0 Kč</span>
+                    </div>
+
+                    <a th:href="@{/order/checkout}" class="btn btn-ice w-100 btn-lg rounded-pill mb-2">
+                        <i class="bi bi-credit-card me-2"></i>Přejít k pokladně
+                    </a>
+                    <a th:href="@{/}" class="btn btn-outline-secondary w-100 rounded-pill">
+                        <i class="bi bi-arrow-left me-2"></i>Pokračovat v nákupu
+                    </a>
+
+                    <p class="text-muted small text-center mt-3 mb-0">
+                        <i class="bi bi-shield-check me-1"></i>Platba při vyzvednutí
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

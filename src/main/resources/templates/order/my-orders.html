@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Moje objednávky')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+    <h1 class="fw-bold mb-5"><i class="bi bi-receipt me-2"></i>Moje objednávky</h1>
+
+    <div th:if="${orders.empty}" class="text-center py-5">
+        <div class="display-1 mb-3">📋</div>
+        <h4 class="text-muted mb-4">Zatím nemáte žádné objednávky.</h4>
+        <a th:href="@{/}" class="btn btn-ice btn-lg rounded-pill px-4">
+            <i class="bi bi-shop me-2"></i>Jít nakupovat
+        </a>
+    </div>
+
+    <div th:each="order : ${orders}" class="card shadow-sm border-0 rounded-4 mb-4">
+        <div class="card-body p-4">
+            <div class="row align-items-start">
+                <div class="col">
+                    <div class="d-flex align-items-center gap-3 mb-2">
+                        <h6 class="fw-bold mb-0" th:text="${order.shopName}">Zmrzlinárna</h6>
+                        <span class="badge rounded-pill"
+                              th:classappend="${order.status == 'CONFIRMED'} ? 'bg-success' : (${order.status == 'READY'} ? 'bg-primary' : 'bg-danger')"
+                              th:text="${order.status}">Status</span>
+                    </div>
+                    <p class="text-muted small mb-2">
+                        <i class="bi bi-calendar me-1"></i>
+                        <span th:text="${order.createdAt}">Datum</span>
+                    </p>
+                    <div th:each="item : ${order.items}" class="small text-muted">
+                        <span th:text="${item.productName} + ' × ' + ${item.quantity}">Položka</span>
+                    </div>
+                </div>
+                <div class="col-auto text-end">
+                    <div class="fw-bold text-ice fs-5 mb-1"
+                         th:text="${#numbers.formatDecimal(order.totalPrice, 1, 2)} + ' Kč'">0 Kč</div>
+                    <small class="text-muted">Platba při vyzvednutí</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+</body>
+</html>

@@ -1,0 +1,214 @@
+/* =====================
+   ZmrzlinaShop — Styles
+   ===================== */
+
+:root {
+    --ice-primary: #e91e8c;
+    --ice-secondary: #9c27b0;
+    --ice-light: #fce4ec;
+    --ice-dark: #c2185b;
+    --ice-gradient: linear-gradient(135deg, #e91e8c, #9c27b0);
+}
+
+/* ===== General ===== */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+/* ===== Navbar ===== */
+.ice-navbar {
+    background: var(--ice-gradient) !important;
+}
+
+.ice-navbar .nav-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+}
+
+/* ===== Colors & Utilities ===== */
+.text-ice {
+    color: var(--ice-primary) !important;
+}
+
+.text-ice-dark {
+    color: var(--ice-dark) !important;
+}
+
+.bg-ice-soft {
+    background-color: var(--ice-light) !important;
+}
+
+.bg-purple-soft {
+    background-color: #f3e5f5 !important;
+}
+
+.bg-success-soft {
+    background-color: #e8f5e9 !important;
+}
+
+.bg-warning-soft {
+    background-color: #fff8e1 !important;
+}
+
+.text-purple {
+    color: #9c27b0 !important;
+}
+
+/* ===== Buttons ===== */
+.btn-ice {
+    background: var(--ice-gradient);
+    color: white;
+    border: none;
+    font-weight: 600;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.btn-ice:hover {
+    color: white;
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.btn-ice:active {
+    transform: translateY(0);
+}
+
+.btn-outline-ice {
+    color: var(--ice-primary);
+    border-color: var(--ice-primary);
+    font-weight: 600;
+}
+
+.btn-outline-ice:hover {
+    background-color: var(--ice-primary);
+    color: white;
+}
+
+/* ===== Hero Section ===== */
+.hero-section {
+    background: var(--ice-gradient);
+    padding: 80px 0;
+}
+
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== Shop Cards ===== */
+.shop-card {
+    border-radius: 20px !important;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    border: none;
+}
+
+.shop-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(233, 30, 140, 0.18) !important;
+}
+
+.shop-emoji {
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.shop-emoji-lg {
+    font-size: 4rem;
+    line-height: 1;
+}
+
+/* ===== Shop Header ===== */
+.shop-header {
+    background: linear-gradient(135deg, var(--ice-light), #f3e5f5);
+    border-left: 4px solid var(--ice-primary);
+}
+
+/* ===== Product Cards ===== */
+.product-card {
+    border-radius: 16px !important;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0 !important;
+}
+
+.product-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* ===== Cart ===== */
+.cart-item {
+    transition: background-color 0.15s;
+}
+
+.cart-item:hover {
+    background-color: #fafafa;
+}
+
+/* ===== Order Confirmation ===== */
+.success-circle {
+    width: 80px;
+    height: 80px;
+    background: var(--ice-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Admin ===== */
+.admin-nav {
+    color: #555;
+    font-weight: 500;
+    transition: background-color 0.15s, color 0.15s;
+}
+
+.admin-nav:hover {
+    background-color: var(--ice-light);
+    color: var(--ice-primary);
+}
+
+.admin-nav.active {
+    background: var(--ice-gradient);
+    color: white !important;
+}
+
+.stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ===== Footer ===== */
+.ice-footer {
+    background: #2d2d2d;
+    color: #ccc;
+}
+
+.ice-footer p {
+    color: #fff;
+}
+
+/* ===== Auth pages ===== */
+.input-group-text.bg-ice-soft {
+    border-right: 1px solid #dee2e6;
+}
+
+/* ===== Badges ===== */
+.badge.bg-ice-soft {
+    background-color: var(--ice-light) !important;
+}
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ice-primary);
+    border-radius: 3px;
+}
