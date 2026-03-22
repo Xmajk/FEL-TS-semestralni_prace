@@ -198,6 +198,116 @@ body {
     background-color: var(--ice-light) !important;
 }
 
+/* ===== Configurator ===== */
+.configurator-header {
+    background: linear-gradient(135deg, var(--ice-light), #f3e5f5);
+    border-left: 4px solid var(--ice-primary);
+}
+
+.step-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--ice-gradient);
+    color: white;
+    font-size: 0.85rem;
+    font-weight: 700;
+}
+
+.btn-outline-ice-config {
+    border: 2px solid #e0e0e0;
+    color: #555;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-ice-config:hover {
+    border-color: var(--ice-primary);
+    color: var(--ice-primary);
+    background: var(--ice-light);
+}
+
+.btn-check:checked + .btn-outline-ice-config {
+    border-color: var(--ice-primary);
+    background: var(--ice-light);
+    color: var(--ice-dark);
+    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.15);
+}
+
+/* Toggle tiles for toppings/cookies */
+.config-tile {
+    border: 2px solid #e8e8e8;
+    color: #555;
+    background: #fff;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.config-tile:hover {
+    border-color: #ccc;
+    background: #fafafa;
+    color: #333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+.config-tile .config-tile-check {
+    opacity: 0;
+    color: var(--ice-primary);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    transform: scale(0.5);
+}
+
+.btn-check:checked + .config-tile {
+    border-color: var(--ice-primary);
+    background: var(--ice-light);
+    color: var(--ice-dark);
+    box-shadow: 0 0 0 3px rgba(233, 30, 140, 0.12);
+    font-weight: 600;
+}
+
+.btn-check:checked + .config-tile .config-tile-check {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Scoop rows */
+.scoop-row {
+    animation: scoopSlideIn 0.25s ease;
+}
+
+@keyframes scoopSlideIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.scoop-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    border-radius: 50%;
+    background: var(--ice-light);
+    color: var(--ice-dark);
+    font-weight: 700;
+    font-size: 0.85rem;
+}
+
+.scoop-remove-btn {
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 /* ===== Scrollbar ===== */
 ::-webkit-scrollbar {
     width: 6px;

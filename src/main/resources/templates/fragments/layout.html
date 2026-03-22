@@ -26,6 +26,9 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/}"><i class="bi bi-house-door"></i> Domů</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{/configurator}"><i class="bi bi-palette"></i> Konfigurátor</a>
+                </li>
                 <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                     <a class="nav-link" th:href="@{/admin}"><i class="bi bi-gear-fill"></i> Admin</a>
                 </li>

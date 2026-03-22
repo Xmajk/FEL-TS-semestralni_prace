@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="~{fragments/layout :: head('Konfigurátor zmrzliny')}"></head>
+<body class="d-flex flex-column min-vh-100">
+
+<nav th:replace="~{fragments/layout :: navbar}"></nav>
+
+<main class="container py-5 flex-grow-1">
+
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Domů</a></li>
+            <li class="breadcrumb-item active">Konfigurátor zmrzliny</li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="configurator-header p-4 rounded-4 mb-5 shadow-sm text-center">
+        <div class="display-3 mb-2">🍦🎨</div>
+        <h1 class="fw-bold mb-1">Konfigurátor zmrzliny</h1>
+        <p class="text-muted mb-0">Sestavte si vlastní zmrzlinu přesně podle svého gusta!</p>
+    </div>
+
+    <!-- Flash messages -->
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+        <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+        <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <form th:action="@{/configurator/add}" method="post" id="configuratorForm">
+        <div class="row g-4">
+            <!-- Left column: Configuration -->
+            <div class="col-lg-8">
+
+                <!-- Step 1: Shop -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <span class="step-badge me-2">1</span>
+                            Vyberte zmrzlinárnu pro vyzvednutí
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-sm-6 col-md-4" th:each="shop, iter : ${shops}">
+                                <input type="radio" class="btn-check" name="shopId"
+                                       th:id="'shop-' + ${shop.id}" th:value="${shop.id}"
+                                       th:checked="${iter.index == 0}"
+                                       autocomplete="off" onchange="updatePrice()">
+                                <label class="btn btn-outline-ice-config w-100 p-3 rounded-3 text-start"
+                                       th:for="'shop-' + ${shop.id}">
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fs-3" th:text="${shop.imageEmoji}">🍦</span>
+                                        <div>
+                                            <div class="fw-bold small" th:text="${shop.name}">Zmrzlinárna</div>
+                                            <small class="text-muted" th:text="${shop.city}">Město</small>
+                                        </div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 2: Container -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <span class="step-badge me-2">2</span>
+                            Vyberte obal
+                        </h5>
+                        <div class="row g-3">
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="container" id="containerCone"
+                                       value="kornout" checked autocomplete="off" onchange="updatePrice()">
+                                <label class="btn btn-outline-ice-config w-100 p-3 rounded-3" for="containerCone">
+                                    <div class="display-5 mb-2">🍦</div>
+                                    <div class="fw-bold">Kornout</div>
+                                    <small class="text-muted" th:text="${#numbers.formatDecimal(priceCone, 1, 2)} + ' Kč'">15 Kč</small>
+                                </label>
+                            </div>
+                            <div class="col-6">
+                                <input type="radio" class="btn-check" name="container" id="containerCup"
+                                       value="kelimek" autocomplete="off" onchange="updatePrice()">
+                                <label class="btn btn-outline-ice-config w-100 p-3 rounded-3" for="containerCup">
+                                    <div class="display-5 mb-2">🥤</div>
+                                    <div class="fw-bold">Kelímek</div>
+                                    <small class="text-muted" th:text="${#numbers.formatDecimal(priceCup, 1, 2)} + ' Kč'">10 Kč</small>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 3: Scoops -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <span class="step-badge me-2">3</span>
+                            Kopečky
+                            <small class="text-muted fw-normal" th:text="'(' + ${#numbers.formatDecimal(priceScoop, 1, 2)} + ' Kč / kopeček)'">25 Kč / kopeček</small>
+                        </h5>
+                        <div id="scoopFlavors">
+                            <!-- Dynamically managed scoop rows -->
+                        </div>
+                        <button type="button" class="btn btn-outline-ice btn-sm rounded-pill mt-3" id="addScoopBtn" onclick="addScoop()">
+                            <i class="bi bi-plus-circle me-1"></i>Přidat kopeček
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Toppings -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <span class="step-badge me-2">4</span>
+                            Posypky a polevy
+                            <small class="text-muted fw-normal" th:text="'(' + ${#numbers.formatDecimal(priceTopping, 1, 2)} + ' Kč / ks)'">10 Kč / ks</small>
+                        </h5>
+                        <div class="row g-2">
+                            <div class="col-sm-6 col-md-4" th:each="topping : ${toppings}">
+                                <input type="checkbox" class="btn-check"
+                                       name="selectedToppings" th:value="${topping}"
+                                       th:id="'topping-' + ${#strings.replace(topping, ' ', '-')}"
+                                       autocomplete="off" onchange="updatePrice()">
+                                <label class="btn config-tile w-100 rounded-3 p-3 text-start"
+                                       th:for="'topping-' + ${#strings.replace(topping, ' ', '-')}">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span th:text="${topping}">Posyp</span>
+                                        <i class="bi bi-check-circle-fill config-tile-check"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Step 5: Cookies -->
+                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">
+                            <span class="step-badge me-2">5</span>
+                            Sušenky a doplňky
+                            <small class="text-muted fw-normal" th:text="'(' + ${#numbers.formatDecimal(priceCookie, 1, 2)} + ' Kč / ks)'">15 Kč / ks</small>
+                        </h5>
+                        <div class="row g-2">
+                            <div class="col-sm-6 col-md-4" th:each="cookie : ${cookies}">
+                                <input type="checkbox" class="btn-check"
+                                       name="selectedCookies" th:value="${cookie}"
+                                       th:id="'cookie-' + ${#strings.replace(cookie, ' ', '-')}"
+                                       autocomplete="off" onchange="updatePrice()">
+                                <label class="btn config-tile w-100 rounded-3 p-3 text-start"
+                                       th:for="'cookie-' + ${#strings.replace(cookie, ' ', '-')}">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <span th:text="${cookie}">Sušenka</span>
+                                        <i class="bi bi-check-circle-fill config-tile-check"></i>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Right column: Summary -->
+            <div class="col-lg-4">
+                <div class="card shadow-sm border-0 rounded-4 sticky-top" style="top: 80px;">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Vaše zmrzlina</h5>
+
+                        <div id="summaryShop" class="d-flex justify-content-between mb-2 small">
+                            <span class="text-muted" id="summaryShopLabel">Zmrzlinárna</span>
+                            <span><i class="bi bi-geo-alt text-ice"></i></span>
+                        </div>
+                        <div id="summaryContainer" class="d-flex justify-content-between mb-2 small">
+                            <span class="text-muted">Kornout</span>
+                            <span id="summaryContainerPrice">15,00 Kč</span>
+                        </div>
+                        <div id="summaryScoops" class="d-flex justify-content-between mb-2 small">
+                            <span class="text-muted">1× kopeček</span>
+                            <span id="summaryScoopsPrice">25,00 Kč</span>
+                        </div>
+                        <div id="summaryToppings" class="d-flex justify-content-between mb-2 small" style="display: none !important;">
+                            <span class="text-muted" id="summaryToppingsLabel">Posypky</span>
+                            <span id="summaryToppingsPrice">0 Kč</span>
+                        </div>
+                        <div id="summaryCookies" class="d-flex justify-content-between mb-2 small" style="display: none !important;">
+                            <span class="text-muted" id="summaryCookiesLabel">Sušenky</span>
+                            <span id="summaryCookiesPrice">0 Kč</span>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold fs-5 mb-4">
+                            <span>Celkem</span>
+                            <span class="text-ice" id="totalPrice">40,00 Kč</span>
+                        </div>
+
+                        <div id="flavorPreview" class="mb-3 text-center">
+                            <div class="display-2 mb-1" id="previewEmoji">🍦</div>
+                            <small class="text-muted" id="previewText">Kornout, 1 kopeček</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-ice w-100 btn-lg rounded-pill mb-2">
+                            <i class="bi bi-cart-plus me-2"></i>Přidat do košíku
+                        </button>
+
+                        <div th:if="${cartCount != null and cartCount > 0}" class="mt-2">
+                            <a th:href="@{/cart}" class="btn btn-outline-ice w-100 rounded-pill">
+                                <i class="bi bi-cart3 me-2"></i>Přejít do košíku
+                                <span class="badge bg-warning text-dark ms-1" th:text="${cartCount}">0</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<div th:replace="~{fragments/layout :: scripts}"></div>
+
+<script th:inline="javascript">
+    const PRICE_CONE = /*[[${priceCone}]]*/ 15;
+    const PRICE_CUP = /*[[${priceCup}]]*/ 10;
+    const PRICE_SCOOP = /*[[${priceScoop}]]*/ 25;
+    const PRICE_TOPPING = /*[[${priceTopping}]]*/ 10;
+    const PRICE_COOKIE = /*[[${priceCookie}]]*/ 15;
+    const FLAVORS = /*[[${flavors}]]*/ [];
+    const MAX_SCOOPS = 5;
+
+    let scoopCount = 0;
+
+    function buildFlavorOptions(selectedIndex) {
+        return FLAVORS.map((f, idx) =>
+            `<option value="${f}" ${idx === selectedIndex ? 'selected' : ''}>${f}</option>`
+        ).join('');
+    }
+
+    function addScoop() {
+        if (scoopCount >= MAX_SCOOPS) return;
+        scoopCount++;
+
+        const container = document.getElementById('scoopFlavors');
+        const row = document.createElement('div');
+        row.className = 'scoop-row d-flex align-items-center gap-2 mb-2';
+        row.dataset.index = scoopCount;
+
+        row.innerHTML = `
+            <span class="scoop-number">${scoopCount}</span>
+            <select class="form-select" name="flavors" onchange="updatePrice()">
+                ${buildFlavorOptions((scoopCount - 1) % FLAVORS.length)}
+            </select>
+            <button type="button" class="btn btn-outline-danger btn-sm rounded-circle scoop-remove-btn"
+                    onclick="removeScoop(this)" title="Odebrat kopeček">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        `;
+
+        container.appendChild(row);
+        updateScoopNumbers();
+        updateAddButton();
+        updatePrice();
+    }
+
+    function removeScoop(btn) {
+        if (scoopCount <= 1) return;
+        btn.closest('.scoop-row').remove();
+        scoopCount--;
+        updateScoopNumbers();
+        updateAddButton();
+        updatePrice();
+    }
+
+    function updateScoopNumbers() {
+        const rows = document.querySelectorAll('.scoop-row');
+        rows.forEach((row, i) => {
+            row.querySelector('.scoop-number').textContent = i + 1;
+            row.dataset.index = i + 1;
+        });
+    }
+
+    function updateAddButton() {
+        const btn = document.getElementById('addScoopBtn');
+        btn.disabled = scoopCount >= MAX_SCOOPS;
+        if (scoopCount >= MAX_SCOOPS) {
+            btn.innerHTML = '<i class="bi bi-x-circle me-1"></i>Maximum kopečků';
+        } else {
+            btn.innerHTML = '<i class="bi bi-plus-circle me-1"></i>Přidat kopeček';
+        }
+
+        // Hide remove buttons if only 1 scoop
+        document.querySelectorAll('.scoop-remove-btn').forEach(b => {
+            b.style.visibility = scoopCount <= 1 ? 'hidden' : 'visible';
+        });
+    }
+
+    function formatPrice(value) {
+        return value.toFixed(2).replace('.', ',') + ' Kč';
+    }
+
+    function getSelectedShopName() {
+        const checked = document.querySelector('input[name="shopId"]:checked');
+        if (!checked) return '';
+        return checked.closest('label') ?
+            checked.nextElementSibling.querySelector('.fw-bold').textContent :
+            document.querySelector(`label[for="${checked.id}"] .fw-bold`).textContent;
+    }
+
+    function updatePrice() {
+        const isCone = document.getElementById('containerCone').checked;
+        const containerPrice = isCone ? PRICE_CONE : PRICE_CUP;
+        const containerName = isCone ? 'Kornout' : 'Kelímek';
+
+        const currentScoops = document.querySelectorAll('.scoop-row').length;
+        const scoopsPrice = currentScoops * PRICE_SCOOP;
+
+        const toppings = document.querySelectorAll('input[name="selectedToppings"]:checked');
+        const toppingsPrice = toppings.length * PRICE_TOPPING;
+
+        const cookies = document.querySelectorAll('input[name="selectedCookies"]:checked');
+        const cookiesPrice = cookies.length * PRICE_COOKIE;
+
+        const total = containerPrice + scoopsPrice + toppingsPrice + cookiesPrice;
+
+        // Summary: shop
+        const shopName = getSelectedShopName();
+        document.getElementById('summaryShopLabel').textContent = shopName || 'Zmrzlinárna';
+
+        // Summary: container
+        document.querySelector('#summaryContainer .text-muted').textContent = containerName;
+        document.getElementById('summaryContainerPrice').textContent = formatPrice(containerPrice);
+
+        // Summary: scoops
+        const scoopWord = currentScoops === 1 ? 'kopeček' : (currentScoops < 5 ? 'kopečky' : 'kopečků');
+        document.querySelector('#summaryScoops .text-muted').textContent = currentScoops + '× ' + scoopWord;
+        document.getElementById('summaryScoopsPrice').textContent = formatPrice(scoopsPrice);
+
+        // Summary: toppings
+        const toppingsRow = document.getElementById('summaryToppings');
+        if (toppings.length > 0) {
+            toppingsRow.style.setProperty('display', 'flex', 'important');
+            document.getElementById('summaryToppingsLabel').textContent = toppings.length + '× posypka';
+            document.getElementById('summaryToppingsPrice').textContent = formatPrice(toppingsPrice);
+        } else {
+            toppingsRow.style.setProperty('display', 'none', 'important');
+        }
+
+        // Summary: cookies
+        const cookiesRow = document.getElementById('summaryCookies');
+        if (cookies.length > 0) {
+            cookiesRow.style.setProperty('display', 'flex', 'important');
+            document.getElementById('summaryCookiesLabel').textContent = cookies.length + '× sušenka';
+            document.getElementById('summaryCookiesPrice').textContent = formatPrice(cookiesPrice);
+        } else {
+            cookiesRow.style.setProperty('display', 'none', 'important');
+        }
+
+        document.getElementById('totalPrice').textContent = formatPrice(total);
+
+        // Preview
+        document.getElementById('previewEmoji').textContent = isCone ? '🍦' : '🍨';
+        let previewParts = [containerName, currentScoops + ' ' + scoopWord];
+        if (toppings.length > 0) previewParts.push(toppings.length + '× posypka');
+        if (cookies.length > 0) previewParts.push(cookies.length + '× sušenka');
+        document.getElementById('previewText').textContent = previewParts.join(', ');
+    }
+
+    // Initialize with 1 scoop
+    document.addEventListener('DOMContentLoaded', function() {
+        addScoop();
+    });
+</script>
+
+</body>
+</html>
