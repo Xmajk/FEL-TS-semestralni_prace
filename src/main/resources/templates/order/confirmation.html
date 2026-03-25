@@ -70,22 +70,29 @@
             <div class="card shadow-sm border-0 rounded-4 mb-5">
                 <div class="card-body p-4">
                     <h6 class="fw-bold mb-3"><i class="bi bi-person me-2 text-ice"></i>Kontaktní údaje</h6>
-                    <div class="row" th:if="${order.customerDetails != null}">
-                        <div class="col-sm-6">
-                            <p class="mb-1">
-                                <strong th:text="${order.customerDetails.firstName + ' ' + order.customerDetails.lastName}">Jméno</strong>
-                            </p>
-                            <p class="text-muted mb-1" th:text="${order.customerDetails.email}">E-mail</p>
-                            <p class="text-muted mb-0" th:text="${order.customerDetails.phone}">Telefon</p>
-                        </div>
-                        <div class="col-sm-6 mt-3 mt-sm-0" th:if="${order.customerDetails.address != null and !order.customerDetails.address.blank}">
-                            <p class="text-muted mb-1" th:text="${order.customerDetails.address}">Adresa</p>
-                            <p class="text-muted mb-0" th:text="${order.customerDetails.city + ' ' + order.customerDetails.zipCode}">Město</p>
-                        </div>
+                    <div th:if="${order.customerDetails != null}">
+                        <p class="mb-1">
+                            <strong th:text="${order.customerDetails.firstName + ' ' + order.customerDetails.lastName}">Jméno</strong>
+                        </p>
+                        <p class="text-muted mb-1" th:text="${order.customerDetails.email}">E-mail</p>
+                        <p class="text-muted mb-0" th:text="${order.customerDetails.phone}">Telefon</p>
                     </div>
-                    <div th:if="${order.customerDetails.note != null and !order.customerDetails.note.blank}" class="mt-3 pt-3 border-top">
+                    <div th:if="${order.customerDetails != null and order.customerDetails.note != null and !order.customerDetails.note.blank}" class="mt-3 pt-3 border-top">
                         <small class="text-muted d-block mb-1">Poznámka:</small>
                         <p class="mb-0" th:text="${order.customerDetails.note}">Poznámka</p>
+                    </div>
+                    <div th:if="${pickupShop != null}" class="mt-3 pt-3 border-top">
+                        <h6 class="fw-bold mb-2"><i class="bi bi-geo-alt me-2 text-ice"></i>Místo vyzvednutí</h6>
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="fs-4" th:text="${pickupShop.imageEmoji}">🍦</span>
+                            <div>
+                                <p class="fw-semibold mb-1" th:text="${pickupShop.name}">Zmrzlinárna</p>
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-pin-map me-1"></i>
+                                    <span th:text="${pickupShop.address + ', ' + pickupShop.city}">Adresa</span>
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -48,25 +48,17 @@
                     </div>
                 </div>
 
-                <div class="card shadow-sm border-0 rounded-4 mb-4">
+                <div class="card shadow-sm border-0 rounded-4 mb-4" th:if="${pickupShop != null}">
                     <div class="card-body p-4">
-                        <h5 class="fw-bold mb-4"><i class="bi bi-geo-alt me-2 text-ice"></i>Adresa vyzvednutí</h5>
-                        <p class="text-muted small mb-3">
-                            <i class="bi bi-info-circle me-1"></i>
-                            Vaši objednávku si vyzvedněte přímo v naší zmrzlinárně.
-                        </p>
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-semibold">Ulice a číslo popisné</label>
-                                <input type="text" th:field="*{address}" class="form-control" placeholder="Václavské náměstí 1">
-                            </div>
-                            <div class="col-md-8">
-                                <label class="form-label fw-semibold">Město</label>
-                                <input type="text" th:field="*{city}" class="form-control" placeholder="Praha">
-                            </div>
-                            <div class="col-md-4">
-                                <label class="form-label fw-semibold">PSČ</label>
-                                <input type="text" th:field="*{zipCode}" class="form-control" placeholder="110 00">
+                        <h5 class="fw-bold mb-3"><i class="bi bi-geo-alt me-2 text-ice"></i>Místo vyzvednutí</h5>
+                        <div class="d-flex align-items-start gap-3">
+                            <span class="fs-2" th:text="${pickupShop.imageEmoji}">🍦</span>
+                            <div>
+                                <p class="fw-semibold mb-1" th:text="${pickupShop.name}">Zmrzlinárna</p>
+                                <p class="text-muted mb-0">
+                                    <i class="bi bi-pin-map me-1"></i>
+                                    <span th:text="${pickupShop.address + ', ' + pickupShop.city}">Adresa</span>
+                                </p>
                             </div>
                         </div>
                     </div>

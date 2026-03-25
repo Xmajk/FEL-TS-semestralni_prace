@@ -45,6 +45,8 @@ public class OrderController {
         model.addAttribute("total", cartService.getTotal(session));
         model.addAttribute("cartCount", cartService.getItemCount(session));
         model.addAttribute("customerDetails", new CustomerDetails());
+        String shopId = cartService.getCartShopId(session);
+        shopService.findById(shopId).ifPresent(s -> model.addAttribute("pickupShop", s));
 
         if (authentication != null && authentication.isAuthenticated()) {
             userService.findByUsername(authentication.getName())
@@ -79,6 +81,7 @@ public class OrderController {
         return orderService.findById(orderId).map(order -> {
             model.addAttribute("order", order);
             model.addAttribute("cartCount", cartService.getItemCount(session));
+            shopService.findById(order.getShopId()).ifPresent(s -> model.addAttribute("pickupShop", s));
             return "order/confirmation";
         }).orElse("redirect:/");
     }
