@@ -9,6 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.math.BigDecimal;
 
 @Controller
 @RequestMapping("/shop")
@@ -25,12 +28,29 @@ public class ShopController {
     }
 
     @GetMapping("/{shopId}")
-    public String shopDetail(@PathVariable String shopId, Model model, HttpSession session) {
+    public String shopDetail(@PathVariable String shopId,
+                             @RequestParam(required = false) String search,
+                             @RequestParam(required = false) String flavor,
+                             @RequestParam(required = false) BigDecimal minPrice,
+                             @RequestParam(required = false) BigDecimal maxPrice,
+                             @RequestParam(defaultValue = "false") boolean onlyAvailable,
+                             Model model, HttpSession session) {
         return shopService.findById(shopId).map(shop -> {
+            boolean hasFilter = (search != null && !search.isBlank())
+                    || (flavor != null && !flavor.isBlank())
+                    || minPrice != null || maxPrice != null || onlyAvailable;
+
             model.addAttribute("shop", shop);
-            model.addAttribute("products", productService.getByShopId(shopId));
+            model.addAttribute("products", productService.filterByShopId(shopId, search, flavor, minPrice, maxPrice, onlyAvailable));
+            model.addAttribute("availableFlavors", productService.getFlavorsByShopId(shopId));
             model.addAttribute("cartCount", cartService.getItemCount(session));
             model.addAttribute("cartShopId", cartService.getCartShopId(session));
+            model.addAttribute("filterSearch", search);
+            model.addAttribute("filterFlavor", flavor);
+            model.addAttribute("filterMinPrice", minPrice);
+            model.addAttribute("filterMaxPrice", maxPrice);
+            model.addAttribute("filterOnlyAvailable", onlyAvailable);
+            model.addAttribute("hasFilter", hasFilter);
             return "shop/detail";
         }).orElse("redirect:/");
     }

@@ -3,6 +3,7 @@ package cz.cvut.fel.ts.ts_semestralni_prace.service;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Product;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -30,6 +31,30 @@ public class ProductService {
     public List<Product> getAvailableByShopId(String shopId) {
         return getAll().stream()
                 .filter(p -> p.getShopId().equals(shopId) && p.isAvailable() && p.getStockQuantity() > 0)
+                .toList();
+    }
+
+    public List<Product> filterByShopId(String shopId, String search, String flavor,
+                                         BigDecimal minPrice, BigDecimal maxPrice, boolean onlyAvailable) {
+        return getAll().stream()
+                .filter(p -> p.getShopId().equals(shopId))
+                .filter(p -> search == null || search.isBlank()
+                        || p.getName().toLowerCase().contains(search.toLowerCase())
+                        || p.getDescription().toLowerCase().contains(search.toLowerCase()))
+                .filter(p -> flavor == null || flavor.isBlank()
+                        || p.getFlavor().equalsIgnoreCase(flavor))
+                .filter(p -> minPrice == null || p.getPrice().compareTo(minPrice) >= 0)
+                .filter(p -> maxPrice == null || p.getPrice().compareTo(maxPrice) <= 0)
+                .filter(p -> !onlyAvailable || (p.isAvailable() && p.getStockQuantity() > 0))
+                .toList();
+    }
+
+    public List<String> getFlavorsByShopId(String shopId) {
+        return getAll().stream()
+                .filter(p -> p.getShopId().equals(shopId))
+                .map(Product::getFlavor)
+                .distinct()
+                .sorted()
                 .toList();
     }
 
