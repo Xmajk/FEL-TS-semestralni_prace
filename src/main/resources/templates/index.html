@@ -67,6 +67,139 @@
     </div>
 </main>
 
+<!-- Quiz -->
+<section class="py-5" style="background: linear-gradient(135deg, #fff9f0 0%, #ffecd2 100%);">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <div class="text-center mb-4">
+                    <div class="display-4 mb-2">🍨</div>
+                    <h2 class="fw-bold">Jakou zmrzlinu si dát?</h2>
+                    <p class="text-muted">Odpověz na 3 otázky a my ti doporučíme tvoji ideální kombinaci.</p>
+                </div>
+
+                <div id="quiz-card" class="card shadow border-0 rounded-4 p-4">
+                    <!-- Step 1 -->
+                    <div class="quiz-step" id="step-1">
+                        <p class="fw-semibold mb-3 text-center">Otázka 1 / 3 &nbsp;·&nbsp; Jaká je tvoje aktuální nálada?</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="1" data-value="sweet">😄 Šťastný/á a plný/á energie</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="1" data-value="creamy">😴 Unavený/á, chci pohodu</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="1" data-value="exotic">🤩 Dobrodružný/á, zkusím něco nového</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="1" data-value="fruity">😌 Klidný/á a v pohodě</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="quiz-step d-none" id="step-2">
+                        <p class="fw-semibold mb-3 text-center">Otázka 2 / 3 &nbsp;·&nbsp; Jakou chuť preferuješ?</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="2" data-value="sweet">🍫 Sladká a čokoládová</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="2" data-value="fruity">🍓 Svěží a ovocná</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="2" data-value="creamy">🍦 Krémová a jemná</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="2" data-value="exotic">🥭 Exotická a zajímavá</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="quiz-step d-none" id="step-3">
+                        <p class="fw-semibold mb-3 text-center">Otázka 3 / 3 &nbsp;·&nbsp; Jaké počasí miluješ?</p>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="3" data-value="fruity">☀️ Horké slunečné léto</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="3" data-value="creamy">❄️ Útulná zima u krbu</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="3" data-value="exotic">🌸 Svěží jarní ráno</button>
+                            <button class="btn btn-outline-warning rounded-pill quiz-btn" data-step="3" data-value="sweet">🍂 Klidný podzimní podvečer</button>
+                        </div>
+                    </div>
+
+                    <!-- Result -->
+                    <div class="quiz-step d-none text-center" id="step-result">
+                        <div class="display-3 mb-2" id="quiz-result-emoji"></div>
+                        <h4 class="fw-bold mb-1" id="quiz-result-title"></h4>
+                        <p class="text-muted mb-3" id="quiz-result-desc"></p>
+                        <div class="d-flex flex-wrap justify-content-center gap-2 mb-4" id="quiz-result-flavors"></div>
+                        <button class="btn btn-outline-secondary rounded-pill" id="quiz-restart">
+                            <i class="bi bi-arrow-repeat me-1"></i>Zkusit znovu
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+(function () {
+    const scores = { sweet: 0, fruity: 0, creamy: 0, exotic: 0 };
+
+    const results = {
+        sweet: {
+            emoji: '🍫',
+            title: 'Milovník/milovnice sladkého!',
+            desc: 'Máš rád/a bohaté a intenzivní chutě. Tato kombinace tě dostane.',
+            flavors: ['Čokoládová extáze', 'Karamelová toffee', 'Nugátová bomba']
+        },
+        fruity: {
+            emoji: '🍓',
+            title: 'Ovocný/á svěžák/svěžačka!',
+            desc: 'Osvěžení je tvoje heslo. Tady je tvůj letní sen v kopečcích.',
+            flavors: ['Citronový sorbet', 'Malinový sorbet', 'Borůvkový sorbet']
+        },
+        creamy: {
+            emoji: '🍦',
+            title: 'Klasický/á krémový/á typ!',
+            desc: 'Jsi věrný/á osvědčeným chutím a nechceš se mýlit. Tohle je jistota.',
+            flavors: ['Vanilková klasika', 'Smetanová klasika', 'Stracciatella']
+        },
+        exotic: {
+            emoji: '🥥',
+            title: 'Dobrodružná duše!',
+            desc: 'Nudné věci tě nebaví. Tahle kombinace tě překvapí na každém kousku.',
+            flavors: ['Kokos & Mango', 'Pistáciový poklad', 'Tiramisu']
+        }
+    };
+
+    document.querySelectorAll('.quiz-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const step = parseInt(this.dataset.step);
+            const value = this.dataset.value;
+            scores[value]++;
+
+            document.getElementById('step-' + step).classList.add('d-none');
+
+            if (step < 3) {
+                document.getElementById('step-' + (step + 1)).classList.remove('d-none');
+            } else {
+                const winner = Object.entries(scores).sort((a, b) => b[1] - a[1])[0][0];
+                const r = results[winner];
+                document.getElementById('quiz-result-emoji').textContent = r.emoji;
+                document.getElementById('quiz-result-title').textContent = r.title;
+                document.getElementById('quiz-result-desc').textContent = r.desc;
+                const flavorsEl = document.getElementById('quiz-result-flavors');
+                flavorsEl.innerHTML = '';
+                r.flavors.forEach(f => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge rounded-pill fs-6 px-3 py-2';
+                    badge.style.background = '#ffb347';
+                    badge.style.color = '#333';
+                    badge.textContent = f;
+                    flavorsEl.appendChild(badge);
+                });
+                document.getElementById('step-result').classList.remove('d-none');
+            }
+        });
+    });
+
+    document.getElementById('quiz-restart').addEventListener('click', function () {
+        scores.sweet = 0; scores.fruity = 0; scores.creamy = 0; scores.exotic = 0;
+        document.getElementById('step-result').classList.add('d-none');
+        document.getElementById('step-1').classList.remove('d-none');
+        ['step-2', 'step-3'].forEach(id => document.getElementById(id).classList.add('d-none'));
+    });
+})();
+</script>
+
 <!-- Features -->
 <section class="bg-light py-5">
     <div class="container">
