@@ -35,12 +35,20 @@ public class ConfiguratorPage {
         driver.get(baseUrl + "/configurator");
         // Počkat, dokud formulář není přítomen v DOM (stránka se plně načetla)
         new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.presenceOfElementLocated(submitButton));
+                .until(ExpectedConditions.urlContains("configurator"));
     }
 
     /** Klikne na tlačítko „Přidat kopeček" (čeká se JavaScript inicializace 1. kopečku). */
     public void addScoop() {
         driver.findElement(addScoopBtn).click();
+    }
+
+    /** Přidá kopeček a počká, dokud se v DOM neobjeví nový &lt;select&gt;. */
+    public void addScoopAndWait() {
+        int before = getScoopCount();
+        clickViaJs(driver.findElement(addScoopBtn));
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(d -> getScoopCount() == before + 1);
     }
 
     /** Nastaví příchuť kopečku (0-based index) na zadanou hodnotu. */

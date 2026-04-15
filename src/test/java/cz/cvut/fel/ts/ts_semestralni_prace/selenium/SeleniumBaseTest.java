@@ -1,5 +1,6 @@
 package cz.cvut.fel.ts.ts_semestralni_prace.selenium;
 
+import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.LoginPage;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
@@ -20,6 +21,8 @@ public abstract class SeleniumBaseTest {
 
     protected WebDriver driver;
 
+    protected LoginPage loginPage;
+
     protected String baseUrl() {
         return "http://localhost:" + port;
     }
@@ -35,6 +38,8 @@ public abstract class SeleniumBaseTest {
         // Implicit wait záměrně nenastavujeme – míchání implicit a explicit waitů
         // způsobuje nepředvídatelné blokování. Každá Page Object metoda používá
         // explicitní WebDriverWait tam, kde je potřeba.
+
+        this.loginPage = new LoginPage(driver);
     }
 
     @AfterEach
@@ -46,9 +51,18 @@ public abstract class SeleniumBaseTest {
 
     /** Přihlásí uživatele přes přihlašovací formulář. */
     protected void loginAs(String username, String password) {
-        driver.get(baseUrl() + "/login");
-        driver.findElement(org.openqa.selenium.By.id("username")).sendKeys(username);
-        driver.findElement(org.openqa.selenium.By.id("password")).sendKeys(password);
-        driver.findElement(org.openqa.selenium.By.cssSelector("button[type=submit]")).click();
+        this.loginPage.open(this.baseUrl());
+        this.loginPage.loginAs(username,password);
+        //try {
+        //    this.driver.wait(1_000);
+        //}catch (Exception e){}
+    }
+
+    protected void loginAsAdmin(){
+        this.loginAs("admin","admin123");
+    }
+
+    protected void loginAsUser(){
+        this.loginAs("jan", "jan123");
     }
 }

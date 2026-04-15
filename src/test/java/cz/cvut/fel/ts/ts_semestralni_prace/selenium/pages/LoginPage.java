@@ -2,6 +2,10 @@ package cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 /**
  * Page Object pro přihlašovací stránku (/login).
@@ -42,6 +46,8 @@ public class LoginPage {
         enterUsername(username);
         enterPassword(password);
         submit();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.urlMatches("\\d+\\/$"));
     }
 
     public boolean isErrorDisplayed() {
