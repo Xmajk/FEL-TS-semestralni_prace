@@ -35,3 +35,11 @@ build/
 .claude/
 processes.md
 data/
+
+docs/source/
+docs/coverCVUT.typ
+!Hrouda.typ
+*.typ
+docs/imgs/
+
+.*lock.*
