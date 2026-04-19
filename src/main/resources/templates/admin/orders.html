@@ -42,6 +42,11 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
 
+            <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-3">
+                <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+
             <div th:if="${orders.empty}" class="text-center py-5 text-muted">
                 <i class="bi bi-receipt fs-1 mb-3 d-block"></i>Zatím žádné objednávky.
             </div>
@@ -53,8 +58,8 @@
                             <div class="d-flex align-items-center gap-3 mb-2">
                                 <h6 class="fw-bold mb-0" th:text="${order.shopName}">Zmrzlinárna</h6>
                                 <span class="badge rounded-pill"
-                                      th:classappend="${order.status == 'CONFIRMED'} ? 'bg-success' : (${order.status == 'READY'} ? 'bg-primary' : 'bg-danger')"
-                                      th:text="${order.status}">Status</span>
+                                      th:classappend="${order.status.badgeClass}"
+                                      th:text="${order.status.label}">Status</span>
                             </div>
                             <p class="text-muted small mb-2">
                                 <i class="bi bi-calendar me-1"></i>
@@ -89,9 +94,12 @@
                                 <label class="form-label small fw-semibold text-muted">Změnit status</label>
                                 <div class="input-group input-group-sm">
                                     <select name="status" class="form-select">
-                                        <option value="CONFIRMED" th:selected="${order.status == 'CONFIRMED'}">CONFIRMED</option>
-                                        <option value="READY" th:selected="${order.status == 'READY'}">READY</option>
-                                        <option value="CANCELLED" th:selected="${order.status == 'CANCELLED'}">CANCELLED</option>
+                                        <option value="NEW" th:selected="${order.status.name() == 'NEW'}">Nová</option>
+                                        <option value="CONFIRMED" th:selected="${order.status.name() == 'CONFIRMED'}">Potvrzená</option>
+                                        <option value="PREPARING" th:selected="${order.status.name() == 'PREPARING'}">Připravuje se</option>
+                                        <option value="READY" th:selected="${order.status.name() == 'READY'}">Připravena</option>
+                                        <option value="PICKED_UP" th:selected="${order.status.name() == 'PICKED_UP'}">Vyzvednuta</option>
+                                        <option value="CANCELLED" th:selected="${order.status.name() == 'CANCELLED'}">Zrušena</option>
                                     </select>
                                     <button type="submit" class="btn btn-outline-secondary">
                                         <i class="bi bi-check"></i>

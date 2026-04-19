@@ -19,7 +19,7 @@ public class Order {
     private String shopName;
     private List<OrderItem> items;
     private CustomerDetails customerDetails;
-    private String status; // CONFIRMED, READY, CANCELLED
+    private OrderStatus status;
     private BigDecimal totalPrice;
     private String createdAt;
 }

@@ -139,8 +139,16 @@ public class AdminController {
     @PostMapping("/orders/status/{id}")
     public String updateOrderStatus(@PathVariable String id, @RequestParam String status,
                                      RedirectAttributes redirectAttributes) {
-        orderService.updateStatus(id, status);
-        redirectAttributes.addFlashAttribute("success", "Status objednávky byl aktualizován.");
+        try {
+            cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus newStatus =
+                    cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus.valueOf(status);
+            orderService.updateStatus(id, newStatus);
+            redirectAttributes.addFlashAttribute("success", "Status objednávky byl aktualizován.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", "Neplatný status: " + status);
+        }
         return "redirect:/admin/orders";
     }
 }

@@ -9,6 +9,15 @@
 <main class="container py-5 flex-grow-1">
     <h1 class="fw-bold mb-5"><i class="bi bi-receipt me-2"></i>Moje objednávky</h1>
 
+    <div th:if="${success}" class="alert alert-success alert-dismissible fade show rounded-3">
+        <i class="bi bi-check-circle me-2"></i><span th:text="${success}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <div th:if="${error}" class="alert alert-danger alert-dismissible fade show rounded-3">
+        <i class="bi bi-exclamation-triangle me-2"></i><span th:text="${error}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
     <div th:if="${orders.empty}" class="text-center py-5">
         <div class="display-1 mb-3">📋</div>
         <h4 class="text-muted mb-4">Zatím nemáte žádné objednávky.</h4>
@@ -24,8 +33,8 @@
                     <div class="d-flex align-items-center gap-3 mb-2">
                         <h6 class="fw-bold mb-0" th:text="${order.shopName}">Zmrzlinárna</h6>
                         <span class="badge rounded-pill"
-                              th:classappend="${order.status == 'CONFIRMED'} ? 'bg-success' : (${order.status == 'READY'} ? 'bg-primary' : 'bg-danger')"
-                              th:text="${order.status}">Status</span>
+                              th:classappend="${order.status.badgeClass}"
+                              th:text="${order.status.label}">Status</span>
                     </div>
                     <p class="text-muted small mb-2">
                         <i class="bi bi-calendar me-1"></i>
@@ -39,6 +48,13 @@
                     <div class="fw-bold text-ice fs-5 mb-1"
                          th:text="${#numbers.formatDecimal(order.totalPrice, 1, 2)} + ' Kč'">0 Kč</div>
                     <small class="text-muted">Platba při vyzvednutí</small>
+                    <form th:if="${order.status.name() == 'NEW' or order.status.name() == 'CONFIRMED'}"
+                          th:action="@{/order/cancel/{id}(id=${order.id})}" method="post" class="mt-2">
+                        <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill"
+                                onclick="return confirm('Opravdu chcete zrušit tuto objednávku?')">
+                            <i class="bi bi-x-circle me-1"></i>Zrušit
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

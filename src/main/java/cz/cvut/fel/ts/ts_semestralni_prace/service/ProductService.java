@@ -85,6 +85,18 @@ public class ProductService {
         fileStorageService.writeList(FILENAME, products);
     }
 
+    public void restoreStock(String productId, int quantity) {
+        List<Product> products = getAll();
+        for (Product p : products) {
+            if (p.getId().equals(productId)) {
+                p.setStockQuantity(p.getStockQuantity() + quantity);
+                p.setAvailable(true);
+                fileStorageService.writeList(FILENAME, products);
+                return;
+            }
+        }
+    }
+
     public boolean reduceStock(String productId, int quantity) {
         List<Product> products = getAll();
         for (Product p : products) {

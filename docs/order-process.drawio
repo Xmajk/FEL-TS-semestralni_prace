@@ -1,0 +1,500 @@
+<mxfile host="app.diagrams.net" agent="Claude">
+  <diagram id="customer-uml-state" name="Cesta zákazníka – UML state diagram">
+    <mxGraphModel
+            dx="1400"
+            dy="900"
+            grid="1"
+            gridSize="10"
+            guides="1"
+            tooltips="1"
+            connect="1"
+            arrows="1"
+            fold="1"
+            page="1"
+            pageScale="1"
+            pageWidth="2200"
+            pageHeight="1500"
+            math="0"
+            shadow="0"
+        >
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+
+        <mxCell
+                    id="title"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;fontStyle=1;"
+                    value="Cesta zákazníka e-shopem – UML stavový diagram (pro testování procesů hloubky 2)"
+                    vertex="1"
+                >
+          <mxGeometry height="30" width="2000" x="100" y="20" as="geometry" />
+        </mxCell>
+
+        <!-- Initial pseudo-state -->
+        <mxCell
+                    id="init"
+                    parent="1"
+                    style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;"
+                    value=""
+                    vertex="1"
+                >
+          <mxGeometry height="24" width="24" x="888" y="80" as="geometry" />
+        </mxCell>
+
+        <!-- State: Anonym -->
+        <mxCell
+                    id="s_anon"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="Anonym&#xa;&#xa;do / zobraz home, košík=∅&#xa;invariant: ¬authenticated"
+                    vertex="1"
+                >
+          <mxGeometry height="100" width="220" x="600" y="180" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="e_init_anon"
+                    edge="1"
+                    parent="1"
+                    source="init"
+                    target="s_anon"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=11;labelBackgroundColor=#ffffff;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;"
+                    value="①  spustitAplikaci()"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- State: Přihlášen -->
+        <mxCell
+                    id="s_login"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="Přihlášen&#xa;&#xa;do / zobraz home s username&#xa;invariant: authenticated ∧ košík=∅"
+                    vertex="1"
+                >
+          <mxGeometry height="100" width="220" x="1100" y="180" as="geometry" />
+        </mxCell>
+
+        <!-- e2: Anonym → Přihlášen přihlásit -->
+        <mxCell
+                    id="e2"
+                    edge="1"
+                    parent="1"
+                    source="s_anon"
+                    target="s_login"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=0;entryY=0.3;entryDx=0;entryDy=0;"
+                    value="②  přihlásitSe(u,p) [valid credentials]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e3: Anonym → Přihlášen registrovat -->
+        <mxCell
+                    id="e3"
+                    edge="1"
+                    parent="1"
+                    source="s_anon"
+                    target="s_login"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=0;entryY=0.7;entryDx=0;entryDy=0;"
+                    value="③  registrovat(u,p) [username unikátní] / uložUživatele"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e4: Přihlášen → Anonym odhlásit -->
+        <mxCell
+                    id="e4"
+                    edge="1"
+                    parent="1"
+                    source="s_login"
+                    target="s_anon"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#999999;fontColor=#444444;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;curved=1;"
+                    value="④  odhlásitSe()"
+                >
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1080" y="310" />
+              <mxPoint x="840" y="310" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- State: VKatalogu -->
+        <mxCell
+                    id="s_cat"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="VKatalogu&#xa;&#xa;entry / načtiProduktyShopu&#xa;do / zobraz produkty + konfigurátor"
+                    vertex="1"
+                >
+          <mxGeometry height="100" width="220" x="850" y="380" as="geometry" />
+        </mxCell>
+
+        <!-- e5: Anonym → VKatalogu -->
+        <mxCell
+                    id="e5"
+                    edge="1"
+                    parent="1"
+                    source="s_anon"
+                    target="s_cat"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑤  vybratZmrzlinárnu(s) [s exists]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e6: Přihlášen → VKatalogu -->
+        <mxCell
+                    id="e6"
+                    edge="1"
+                    parent="1"
+                    source="s_login"
+                    target="s_cat"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑥  vybratZmrzlinárnu(s) [s exists]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- State: VKošíku -->
+        <mxCell
+                    id="s_cart"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="VKošíku&#xa;&#xa;entry / setShop(p.shopId)&#xa;invariant: ∃ položka ∧ všechny ze stejného shopu"
+                    vertex="1"
+                >
+          <mxGeometry height="110" width="220" x="850" y="560" as="geometry" />
+        </mxCell>
+
+        <!-- e7: VKatalogu → VKošíku přidat preset -->
+        <mxCell
+                    id="e7"
+                    edge="1"
+                    parent="1"
+                    source="s_cat"
+                    target="s_cart"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.3;exitY=1;exitDx=0;exitDy=0;entryX=0.3;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑦  přidatPreset(p) [available ∧ stock ≥ 1]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e8: VKatalogu → VKošíku přidat vlastní -->
+        <mxCell
+                    id="e8"
+                    edge="1"
+                    parent="1"
+                    source="s_cat"
+                    target="s_cart"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;exitX=0.7;exitY=1;exitDx=0;exitDy=0;entryX=0.7;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑧  přidatVlastní(c) [shop OK] / spočítejCenu"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e9: VKošíku → VKatalogu loop back -->
+        <mxCell
+                    id="e9"
+                    edge="1"
+                    parent="1"
+                    source="s_cart"
+                    target="s_cat"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#999999;fontColor=#444444;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;curved=1;"
+                    value="⑨  pokračovatVNákupu()"
+                >
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="780" y="615" />
+              <mxPoint x="780" y="430" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- e10: VKošíku → Anonym vyprázdnit -->
+        <mxCell
+                    id="e10"
+                    edge="1"
+                    parent="1"
+                    source="s_cart"
+                    target="s_anon"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#b85450;fontColor=#b85450;exitX=0;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;curved=1;"
+                    value="⑩  vyprázdnitKošík()"
+                >
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="540" />
+              <mxPoint x="540" y="320" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- State: NaCheckoutu -->
+        <mxCell
+                    id="s_chk"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="NaCheckoutu&#xa;&#xa;do / vyplň jméno, email, telefon&#xa;total = Σ položek"
+                    vertex="1"
+                >
+          <mxGeometry height="110" width="220" x="850" y="750" as="geometry" />
+        </mxCell>
+
+        <!-- e11: VKošíku → NaCheckoutu -->
+        <mxCell
+                    id="e11"
+                    edge="1"
+                    parent="1"
+                    source="s_cart"
+                    target="s_chk"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑪  jítNaCheckout() [¬cart.isEmpty()]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e12: NaCheckoutu → VKošíku zpět -->
+        <mxCell
+                    id="e12"
+                    edge="1"
+                    parent="1"
+                    source="s_chk"
+                    target="s_cart"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#999999;fontColor=#444444;exitX=1;exitY=0.3;exitDx=0;exitDy=0;entryX=1;entryY=0.7;entryDx=0;entryDy=0;curved=1;"
+                    value="⑫  zpětDoKošíku()"
+                >
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1130" y="775" />
+              <mxPoint x="1130" y="650" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- e14: NaCheckoutu → VKošíku chyba -->
+        <mxCell
+                    id="e14"
+                    edge="1"
+                    parent="1"
+                    source="s_chk"
+                    target="s_cart"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;strokeColor=#b85450;fontColor=#b85450;dashed=1;exitX=1;exitY=0.7;exitDx=0;exitDy=0;entryX=1;entryY=0.3;entryDx=0;entryDy=0;curved=1;"
+                    value="⑭  odeslatObjednávku() [total &lt; min] / flash chyba"
+                >
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1220" y="800" />
+              <mxPoint x="1220" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+
+        <!-- State: ObjednávkaAktivní -->
+        <mxCell
+                    id="s_order"
+                    parent="1"
+                    style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontStyle=1;fontSize=12;verticalAlign=top;spacingTop=6;"
+                    value="ObjednávkaAktivní&#xa;&#xa;entry / vytvořObjednávku, snížitSklad, vyprázdnitKošík&#xa;do / sleduj status (Nová → … → Připravena)"
+                    vertex="1"
+                >
+          <mxGeometry height="110" width="220" x="850" y="940" as="geometry" />
+        </mxCell>
+
+        <!-- e13: NaCheckoutu → ObjednávkaAktivní -->
+        <mxCell
+                    id="e13"
+                    edge="1"
+                    parent="1"
+                    source="s_chk"
+                    target="s_order"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;fontStyle=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;"
+                    value="⑬  odeslatObjednávku() [total ≥ min ∧ formulářOK]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Final state: Vyzvednuto -->
+        <mxCell
+                    id="end_picked"
+                    parent="1"
+                    style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;"
+                    value=""
+                    vertex="1"
+                >
+          <mxGeometry height="24" width="24" x="788" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="end_picked_o"
+                    parent="1"
+                    style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;"
+                    value=""
+                    vertex="1"
+                >
+          <mxGeometry height="36" width="36" x="782" y="1134" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="lbl_picked"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=12;"
+                    value="Vyzvednuto"
+                    vertex="1"
+                >
+          <mxGeometry height="20" width="120" x="740" y="1180" as="geometry" />
+        </mxCell>
+
+        <!-- Final state: Zrušeno -->
+        <mxCell
+                    id="end_cancel"
+                    parent="1"
+                    style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;"
+                    value=""
+                    vertex="1"
+                >
+          <mxGeometry height="24" width="24" x="1108" y="1140" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="end_cancel_o"
+                    parent="1"
+                    style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;"
+                    value=""
+                    vertex="1"
+                >
+          <mxGeometry height="36" width="36" x="1102" y="1134" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="lbl_cancel"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;fontStyle=1;fontSize=12;"
+                    value="Zrušeno&#xa;entry / restoreStock"
+                    vertex="1"
+                >
+          <mxGeometry height="40" width="200" x="1020" y="1180" as="geometry" />
+        </mxCell>
+
+        <!-- e16: ObjednávkaAktivní → Vyzvednuto -->
+        <mxCell
+                    id="e16"
+                    edge="1"
+                    parent="1"
+                    source="s_order"
+                    target="end_picked"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;fontStyle=1;exitX=0.3;exitY=1;exitDx=0;exitDy=0;"
+                    value="⑯  vyzvednoutObjednávku() [admin ∧ status=Připravena]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- e15: ObjednávkaAktivní → Zrušeno -->
+        <mxCell
+                    id="e15"
+                    edge="1"
+                    parent="1"
+                    source="s_order"
+                    target="end_cancel"
+                    style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;fontSize=10;labelBackgroundColor=#ffffff;fontStyle=1;strokeColor=#b85450;fontColor=#b85450;exitX=0.7;exitY=1;exitDx=0;exitDy=0;"
+                    value="⑮  zrušitObjednávku() [owner ∧ status ∈ {Nová, Potvrzená}]"
+                >
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+        <!-- Notace legend -->
+        <mxCell
+                    id="legend"
+                    parent="1"
+                    style="text;html=1;strokeColor=#999999;fillColor=#f5f5f5;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;spacing=8;"
+                    value="UML state-diagram notace&#xa;&#xa;• Zaoblený obdélník = stav (entry / do uvnitř).&#xa;• Šipka:  ⓝ  trigger() [guard] / akce.&#xa;• Plný kruh = počáteční pseudo-stav.&#xa;• Terč (●⊙) = finální stav.&#xa;• Plná = úspěšný přechod.&#xa;• Červená = vede do koncového stavu Zrušeno&#xa;  nebo trvale ukončuje aktivní košík.&#xa;• Šedá = manuální návrat (back).&#xa;• Červená čárkovaná = přechod kvůli chybě validace.&#xa;&#xa;Číslování přechodů (①–⑯) slouží pro analýzu&#xa;procesu hloubky 2 – viz tabulka vpravo."
+                    vertex="1"
+                >
+          <mxGeometry height="240" width="430" x="1450" y="80" as="geometry" />
+        </mxCell>
+
+        <!-- IO Table -->
+        <mxCell
+                    id="io_table_title"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;"
+                    value="Vstupní a výstupní přechody jednotlivých stavů"
+                    vertex="1"
+                >
+          <mxGeometry height="20" width="430" x="1450" y="340" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="io_table"
+                    parent="1"
+                    style="text;html=1;strokeColor=#666666;fillColor=#ffffff;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontSize=11;fontFamily=Courier New;spacing=8;"
+                    value="Stav             | Vstupní        | Výstupní&#xa;-----------------+----------------+--------------&#xa;[init]           |                |  1&#xa;Anonym           |  1, 4, 10      |  2, 3, 5&#xa;Přihlášen        |  2, 3          |  4, 6&#xa;VKatalogu        |  5, 6, 9       |  7, 8&#xa;VKošíku          |  7, 8, 12, 14  |  9, 10, 11&#xa;NaCheckoutu      |  11            |  12, 13, 14&#xa;ObjednávkaAktivní|  13            |  15, 16&#xa;Vyzvednuto       |  16            |&#xa;Zrušeno          |  15            |"
+                    vertex="1"
+                >
+          <mxGeometry height="200" width="430" x="1450" y="365" as="geometry" />
+        </mxCell>
+
+        <!-- Depth 2 combinations -->
+        <mxCell
+                    id="d2_title"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;"
+                    value="Hloubka pokrytí 2 – kombinace pro test"
+                    vertex="1"
+                >
+          <mxGeometry height="20" width="430" x="1450" y="585" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="d2_combos"
+                    parent="1"
+                    style="text;html=1;strokeColor=#82b366;fillColor=#f0f8f0;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=11;fontFamily=Courier New;spacing=8;"
+                    value="Anonym:    1-2,  1-3,  1-5,&#xa;           4-2,  4-3,  4-5,&#xa;           10-2, 10-3, 10-5            (9)&#xa;Přihlášen: 2-4,  2-6,  3-4,  3-6        (4)&#xa;VKatalogu: 5-7,  5-8,  6-7,  6-8,&#xa;           9-7,  9-8                    (6)&#xa;VKošíku:   7-9,  7-10, 7-11,&#xa;           8-9,  8-10, 8-11,&#xa;           12-9, 12-10,12-11,&#xa;           14-9, 14-10,14-11           (12)&#xa;NaCheckoutu: 11-12, 11-13, 11-14        (3)&#xa;Objednávka:  13-15, 13-16               (2)&#xa;------------------------------------------&#xa;Celkem 36 dvojic."
+                    vertex="1"
+                >
+          <mxGeometry height="290" width="430" x="1450" y="610" as="geometry" />
+        </mxCell>
+
+        <!-- Test sequences -->
+        <mxCell
+                    id="ts_title"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;"
+                    value="Testovací sekvence (návrh – pokrytí všech 36 dvojic)"
+                    vertex="1"
+                >
+          <mxGeometry height="20" width="280" x="1900" y="80" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="test_seq"
+                    parent="1"
+                    style="text;html=1;strokeColor=#6c8ebf;fillColor=#eaf2fb;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontFamily=Courier New;spacing=8;"
+                    value="T1: 1-2-6-7-11-13-16&#xa;     happy: login → preset → pickup&#xa;&#xa;T2: 1-3-6-8-11-13-15&#xa;     register → vlastní → cancel&#xa;&#xa;T3: 1-5-7-9-7-11-14-9-8-11-12-11-13-16&#xa;     anonym, validace, smyčky&#xa;&#xa;T4: 1-5-8-10-3-4-2-6-8-11-13-15&#xa;     anonym → vyprázdnit → register&#xa;     → odhlásit → login → vlastní&#xa;&#xa;T5: 1-5-7-10-2-6-7-11-13-16&#xa;     po vyprázdnění login a pickup&#xa;&#xa;T6: 1-2-4-5-7-11-12-9-7-11-13-15&#xa;     login → odhlásit → preset → zpět&#xa;     → smyčka → cancel&#xa;&#xa;T7: 1-3-4-1-5-8-9-7-11-14-10-...&#xa;     register → odhlásit → restart&#xa;&#xa;Pokrytí dvojic – viz tabulka vlevo.&#xa;~7 sekvencí pokryje všech 36 dvojic."
+                    vertex="1"
+                >
+          <mxGeometry height="850" width="280" x="1900" y="105" as="geometry" />
+        </mxCell>
+
+        <!-- Mapping to code -->
+        <mxCell
+                    id="code_map_title"
+                    parent="1"
+                    style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=13;fontStyle=1;"
+                    value="Mapování přechodů na endpointy a kód"
+                    vertex="1"
+                >
+          <mxGeometry height="20" width="1300" x="100" y="1280" as="geometry" />
+        </mxCell>
+        <mxCell
+                    id="code_map"
+                    parent="1"
+                    style="text;html=1;strokeColor=#d6b656;fillColor=#fff8e1;align=left;verticalAlign=top;whiteSpace=wrap;rounded=1;fontSize=10;fontFamily=Courier New;spacing=8;"
+                    value="Přechod | HTTP                                  | Třída.metoda                                            | Guard&#xa;--------+---------------------------------------+---------------------------------------------------------+-----------------------------------------&#xa;   1    | GET  /                                | HomeController.index                                    | —&#xa;   2    | POST /login                           | (Spring Security) UserService.loadUserByUsername        | platné credentials&#xa;   3    | POST /register                        | AuthController.register                                 | username unikátní, valid form&#xa;   4    | POST /logout                          | (Spring Security)                                       | —&#xa;   5    | GET  /shop/{id}                       | ShopController.detail                                   | shop existuje&#xa;   6    | GET  /shop/{id}                       | ShopController.detail                                   | shop existuje&#xa;   7    | POST /cart/add/{productId}            | CartController.addToCart → CartService.addItem         | available ∧ stock ≥ qty ∧ stejná zmrzlinárna&#xa;   8    | POST /configurator/add                | ConfiguratorController.addCustomIceCream                | shop existuje ∧ stejná zmrzlinárna&#xa;   9    | GET  /shop/{id}                       | ShopController.detail                                   | —&#xa;  10    | POST /cart/clear                      | CartController.clear → CartService.clearCart           | —&#xa;  11    | GET  /order/checkout                  | OrderController.checkout                                | ¬cart.isEmpty()&#xa;  12    | GET  /cart                            | CartController.viewCart                                 | —&#xa;  13    | POST /order/checkout                  | OrderController.processCheckout → OrderService.create  | total ≥ app.order.min-total ∧ ¬cart.isEmpty()&#xa;  14    | POST /order/checkout (chyba)          | OrderController.processCheckout → IllegalStateExc.     | total &lt; app.order.min-total&#xa;  15    | POST /order/cancel/{orderId}          | OrderController.cancelOrder → OrderService.updateStatus | owner ∧ status ∈ {NEW, CONFIRMED}&#xa;  16    | POST /admin/orders/status/{id}        | AdminController.updateOrderStatus                       | ROLE_ADMIN ∧ canTransitionTo(PICKED_UP)"
+                    vertex="1"
+                >
+          <mxGeometry
+                        height="380"
+                        width="1300"
+                        x="100"
+                        y="1305"
+                        as="geometry"
+                    />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

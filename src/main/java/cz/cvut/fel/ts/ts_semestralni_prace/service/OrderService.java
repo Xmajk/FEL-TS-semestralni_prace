@@ -1,6 +1,7 @@
 package cz.cvut.fel.ts.ts_semestralni_prace.service;
 
 import cz.cvut.fel.ts.ts_semestralni_prace.model.*;
+import cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,13 +16,15 @@ public class OrderService {
 
     private static final String FILENAME = "orders.json";
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-
     private final FileStorageService fileStorageService;
     private final ProductService productService;
+    private final BigDecimal minOrderTotal;
 
-    public OrderService(FileStorageService fileStorageService, ProductService productService) {
+    public OrderService(FileStorageService fileStorageService, ProductService productService,
+                        @org.springframework.beans.factory.annotation.Value("${app.order.min-total:50}") BigDecimal minOrderTotal) {
         this.fileStorageService = fileStorageService;
         this.productService = productService;
+        this.minOrderTotal = minOrderTotal;
     }
 
     public List<Order> getAll() {
@@ -52,6 +55,11 @@ public class OrderService {
                 .map(OrderItem::getSubtotal)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
+        if (total.compareTo(minOrderTotal) < 0) {
+            throw new IllegalStateException(
+                    "Minimální hodnota objednávky je " + minOrderTotal + " Kč. Aktuální: " + total + " Kč.");
+        }
+
         Order order = Order.builder()
                 .id(UUID.randomUUID().toString())
                 .userId(userId)
@@ -59,7 +67,7 @@ public class OrderService {
                 .shopName(shopName)
                 .items(orderItems)
                 .customerDetails(customerDetails)
-                .status("CONFIRMED")
+                .status(OrderStatus.NEW)
                 .totalPrice(total)
                 .createdAt(LocalDateTime.now().format(FORMATTER))
                 .build();
@@ -74,12 +82,28 @@ public class OrderService {
         return order;
     }
 
-    public void updateStatus(String orderId, String status) {
+    /**
+     * @throws IllegalStateException if the transition is not allowed
+     */
+    public void updateStatus(String orderId, OrderStatus newStatus) {
         List<Order> orders = getAll();
-        orders.stream()
+        Order order = orders.stream()
                 .filter(o -> o.getId().equals(orderId))
                 .findFirst()
-                .ifPresent(o -> o.setStatus(status));
+                .orElseThrow(() -> new IllegalArgumentException("Objednávka nenalezena: " + orderId));
+
+        if (!order.getStatus().canTransitionTo(newStatus)) {
+            throw new IllegalStateException(
+                    "Nelze změnit stav z " + order.getStatus().getLabel() + " na " + newStatus.getLabel());
+        }
+
+        order.setStatus(newStatus);
         fileStorageService.writeList(FILENAME, orders);
+
+        if (newStatus == OrderStatus.CANCELLED) {
+            for (OrderItem item : order.getItems()) {
+                productService.restoreStock(item.getProductId(), item.getQuantity());
+            }
+        }
     }
 }

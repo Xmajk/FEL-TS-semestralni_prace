@@ -1,0 +1,190 @@
+<mxfile host="app.diagrams.net" agent="Claude">
+  <diagram id="cart-order-activity" name="Přidání do košíku a objednávka">
+    <mxGraphModel dx="2357" dy="1302" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="1960" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;fontSize=14;fontStyle=1;" value="Přidání produktu do košíku a vytvoření objednávky&amp;nbsp;" vertex="1">
+          <mxGeometry height="26" width="430" x="210" y="12" as="geometry" />
+        </mxCell>
+        <mxCell id="start" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="385" y="55" as="geometry" />
+        </mxCell>
+        <mxCell id="act1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="POST /cart/add/{productId}&#xa;Uživatel přidá produkt do košíku" vertex="1">
+          <mxGeometry height="50" width="200" x="300" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="dec1" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Produkt&#xa;nalezen?" vertex="1">
+          <mxGeometry height="70" width="140" x="330" y="205" as="geometry" />
+        </mxCell>
+        <mxCell id="dec2" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Dostupný &amp;&#xa;sklad ≥ qty?" vertex="1">
+          <mxGeometry height="70" width="140" x="330" y="325" as="geometry" />
+        </mxCell>
+        <mxCell id="dec3" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Košík prázdný&#xa;nebo stejná&#xa;zmrzlinárna?" vertex="1">
+          <mxGeometry height="84" width="160" x="320" y="445" as="geometry" />
+        </mxCell>
+        <mxCell id="dec4" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Produkt&#xa;již v košíku?" vertex="1">
+          <mxGeometry height="70" width="140" x="330" y="579" as="geometry" />
+        </mxCell>
+        <mxCell id="act2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Sloučit –&#xa;navýšit množství" vertex="1">
+          <mxGeometry height="44" width="160" x="130" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="act3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Přidat nový produkt&#xa;do košíku" vertex="1">
+          <mxGeometry height="44" width="160" x="410" y="682" as="geometry" />
+        </mxCell>
+        <mxCell id="join1" parent="1" style="fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="7" width="240" x="280" y="766" as="geometry" />
+        </mxCell>
+        <mxCell id="act4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="Košík aktualizován&#xa;flash: &#39;Produkt přidán do košíku&#39;" vertex="1">
+          <mxGeometry height="44" width="240" x="280" y="808" as="geometry" />
+        </mxCell>
+        <mxCell id="act5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="GET /cart&#xa;Uživatel prohlíží košík" vertex="1">
+          <mxGeometry height="44" width="200" x="300" y="895" as="geometry" />
+        </mxCell>
+        <mxCell id="act6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="GET /order/checkout&#xa;Přejde k pokladně" vertex="1">
+          <mxGeometry height="44" width="200" x="300" y="982" as="geometry" />
+        </mxCell>
+        <mxCell id="dec5" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Košík&#xa;prázdný?" vertex="1">
+          <mxGeometry height="70" width="140" x="330" y="1076" as="geometry" />
+        </mxCell>
+        <mxCell id="act7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="Vyplní CustomerDetails&#xa;(jméno, e-mail, telefon, poznámka)" vertex="1">
+          <mxGeometry height="44" width="270" x="265" y="1196" as="geometry" />
+        </mxCell>
+        <mxCell id="act8" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=11;" value="POST /order/checkout&#xa;Odešle objednávku" vertex="1">
+          <mxGeometry height="44" width="200" x="300" y="1283" as="geometry" />
+        </mxCell>
+        <mxCell id="dec6" parent="1" style="rhombus;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=11;" value="Cena&#xa;≥ 50 Kč?" vertex="1">
+          <mxGeometry height="70" width="140" x="330" y="1378" as="geometry" />
+        </mxCell>
+        <mxCell id="act9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="OrderService.createOrder()&#xa;Vytvořit objednávku (status: NOVÁ)" vertex="1">
+          <mxGeometry height="44" width="260" x="270" y="1498" as="geometry" />
+        </mxCell>
+        <mxCell id="act10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="productService.reduceStock()&#xa;Snížit sklad pro každou položku" vertex="1">
+          <mxGeometry height="44" width="260" x="270" y="1590" as="geometry" />
+        </mxCell>
+        <mxCell id="act11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="cartService.clearCart()&#xa;Vymazat košík ze session" vertex="1">
+          <mxGeometry height="44" width="260" x="270" y="1682" as="geometry" />
+        </mxCell>
+        <mxCell id="act12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=11;" value="redirect /order/confirmation/{id}&#xa;Objednávka potvrzena" vertex="1">
+          <mxGeometry height="44" width="260" x="270" y="1774" as="geometry" />
+        </mxCell>
+        <mxCell id="end_inner" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=#000000;strokeColor=#000000;" value="" vertex="1">
+          <mxGeometry height="30" width="30" x="385" y="1864" as="geometry" />
+        </mxCell>
+        <mxCell id="end_outer" parent="1" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;strokeWidth=2;" value="" vertex="1">
+          <mxGeometry height="42" width="42" x="379" y="1858" as="geometry" />
+        </mxCell>
+        <mxCell id="err1" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="Chyba: Produkt nenalezen&#xa;redirect /" vertex="1">
+          <mxGeometry height="44" width="200" x="590" y="218" as="geometry" />
+        </mxCell>
+        <mxCell id="err2" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="Chyba: Nedostatek zásob&#xa;redirect /shop/{shopId}" vertex="1">
+          <mxGeometry height="44" width="200" x="590" y="338" as="geometry" />
+        </mxCell>
+        <mxCell id="err3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="Chyba: Jiná zmrzlinárna&#xa;redirect /shop/{shopId}" vertex="1">
+          <mxGeometry height="44" width="200" x="590" y="465" as="geometry" />
+        </mxCell>
+        <mxCell id="err4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="Chyba: Košík je prázdný&#xa;redirect /cart" vertex="1">
+          <mxGeometry height="44" width="200" x="590" y="1089" as="geometry" />
+        </mxCell>
+        <mxCell id="err5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=11;" value="Chyba: Min. hodnota nesplněna&#xa;redirect /cart" vertex="1">
+          <mxGeometry height="44" width="200" x="590" y="1391" as="geometry" />
+        </mxCell>
+        <mxCell id="e_s_a1" edge="1" parent="1" source="start" style="edgeStyle=orthogonalEdgeStyle;" target="act1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a1_d1" edge="1" parent="1" source="act1" style="edgeStyle=orthogonalEdgeStyle;" target="dec1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d1_d2" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="dec2" value="Ano">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d1_e1" edge="1" parent="1" source="dec1" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err1" value="Ne">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d2_d3" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="dec3" value="Ano">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d2_e2" edge="1" parent="1" source="dec2" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err2" value="Ne">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d3_d4" edge="1" parent="1" source="dec3" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="dec4" value="Ano">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d3_e3" edge="1" parent="1" source="dec3" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err3" value="Ne">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d4_a2" edge="1" parent="1" source="dec4" style="edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="act2" value="Ano">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="614" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_d4_a3" edge="1" parent="1" source="dec4" style="edgeStyle=orthogonalEdgeStyle;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="act3" value="Ne">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="614" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_a2_j" edge="1" parent="1" source="act2" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.1;entryY=0.5;entryDx=0;entryDy=0;" target="join1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="210" y="756" />
+              <mxPoint x="304" y="756" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_a3_j" edge="1" parent="1" source="act3" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.9;entryY=0.5;entryDx=0;entryDy=0;" target="join1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="490" y="756" />
+              <mxPoint x="496" y="756" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e_j_a4" edge="1" parent="1" source="join1" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="act4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a4_a5" edge="1" parent="1" source="act4" style="edgeStyle=orthogonalEdgeStyle;" target="act5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a5_a6" edge="1" parent="1" source="act5" style="edgeStyle=orthogonalEdgeStyle;" target="act6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a6_d5" edge="1" parent="1" source="act6" style="edgeStyle=orthogonalEdgeStyle;" target="dec5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d5_a7" edge="1" parent="1" source="dec5" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="act7" value="Ne">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d5_e4" edge="1" parent="1" source="dec5" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err4" value="Ano">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a7_a8" edge="1" parent="1" source="act7" style="edgeStyle=orthogonalEdgeStyle;" target="act8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a8_d6" edge="1" parent="1" source="act8" style="edgeStyle=orthogonalEdgeStyle;" target="dec6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d6_a9" edge="1" parent="1" source="dec6" style="edgeStyle=orthogonalEdgeStyle;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" target="act9" value="Ano">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_d6_e5" edge="1" parent="1" source="dec6" style="edgeStyle=orthogonalEdgeStyle;strokeColor=#b85450;fontColor=#b85450;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="err5" value="Ne">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a9_a10" edge="1" parent="1" source="act9" style="edgeStyle=orthogonalEdgeStyle;" target="act10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a10_a11" edge="1" parent="1" source="act10" style="edgeStyle=orthogonalEdgeStyle;" target="act11">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a11_a12" edge="1" parent="1" source="act11" style="edgeStyle=orthogonalEdgeStyle;" target="act12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e_a12_end" edge="1" parent="1" source="act12" style="edgeStyle=orthogonalEdgeStyle;" target="end_inner">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

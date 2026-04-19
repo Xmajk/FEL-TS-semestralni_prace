@@ -3,6 +3,7 @@ package cz.cvut.fel.ts.ts_semestralni_prace.controller;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.CartItem;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.CustomerDetails;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Order;
+import cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.CartService;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.OrderService;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.ShopService;
@@ -70,7 +71,13 @@ public class OrderController {
         String shopName = shopService.findById(shopId).map(s -> s.getName()).orElse("Neznámá zmrzlinárna");
         String userId = (authentication != null && authentication.isAuthenticated()) ? authentication.getName() : null;
 
-        Order order = orderService.createOrder(cart, customerDetails, shopId, shopName, userId);
+        Order order;
+        try {
+            order = orderService.createOrder(cart, customerDetails, shopId, shopName, userId);
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/cart";
+        }
         cartService.clearCart(session);
 
         return "redirect:/order/confirmation/" + order.getId();
@@ -84,6 +91,26 @@ public class OrderController {
             shopService.findById(order.getShopId()).ifPresent(s -> model.addAttribute("pickupShop", s));
             return "order/confirmation";
         }).orElse("redirect:/");
+    }
+
+    @PostMapping("/cancel/{orderId}")
+    public String cancelOrder(@PathVariable String orderId, Authentication authentication,
+                               RedirectAttributes redirectAttributes) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "redirect:/login";
+        }
+        Order order = orderService.findById(orderId).orElse(null);
+        if (order == null || !authentication.getName().equals(order.getUserId())) {
+            redirectAttributes.addFlashAttribute("error", "Objednávka nenalezena.");
+            return "redirect:/order/moje";
+        }
+        try {
+            orderService.updateStatus(orderId, OrderStatus.CANCELLED);
+            redirectAttributes.addFlashAttribute("success", "Objednávka byla zrušena.");
+        } catch (IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return "redirect:/order/moje";
     }
 
     @GetMapping("/moje")

@@ -43,3 +43,5 @@ docs/coverCVUT.typ
 docs/imgs/
 
 .*lock.*
+
+./CLAUDE.md
