@@ -3,15 +3,12 @@ package cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
-/**
- * Page Object pro stránku košíku (/cart).
- */
 public class CartPage {
 
     private final WebDriver driver;
 
     private final By cartItems      = By.cssSelector(".cart-item");
-    private final By emptyCartMsg   = By.cssSelector(".display-1");   // emoji 🛒
+    private final By emptyCartMsg   = By.cssSelector(".display-1");
     private final By checkoutLink   = By.cssSelector("a[href*='/order/checkout']");
     private final By clearCartBtn   = By.cssSelector("form[action*='/cart/clear'] button");
     private final By totalPriceEl   = By.cssSelector(".col-lg-4 .text-ice");

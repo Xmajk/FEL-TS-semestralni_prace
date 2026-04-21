@@ -1,0 +1,21 @@
+{
+  "code_actions_on_format": {
+    "source.organizeImports": true,
+    "source.fixAll.ruff": true,
+  },
+  "lsp": {
+    "jdtls": {
+      "settings": {
+        "jdk_auto_download": true,
+        "lombok_support": true,
+        "java": {
+          "maven": {
+            "downloadSources": true,
+            "updateSnapshots": true,
+            "enabled": true,
+          },
+        },
+      },
+    },
+  },
+}

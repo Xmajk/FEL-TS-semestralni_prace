@@ -36,12 +36,13 @@ build/
 processes.md
 data/
 
-docs/source/
+!docs/source/
 docs/coverCVUT.typ
-!Hrouda.typ
+Hrouda.typ
 *.typ
 docs/imgs/
+docs/Hrouda.typ
 
 .*lock.*
-
 ./CLAUDE.md
+./CLAUDE.md[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)[@Image](zed:///agent/pasted-image?name=Image)

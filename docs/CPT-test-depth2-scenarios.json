@@ -1,0 +1,176 @@
+{
+  "testSetName": "Process test set 19.4.2026;23:58",
+  "graphName": "New model",
+  "algorithmType": "PCT",
+  "tdl": 2,
+  "reduction": false,
+  "showNodes": false,
+  "testPaths": [
+    {
+      "testPathId": 1,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 4
+        },
+        {
+          "edgeId": 5
+        },
+        {
+          "edgeId": 7
+        },
+        {
+          "edgeId": 8
+        }
+      ]
+    },
+    {
+      "testPathId": 2,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 4
+        },
+        {
+          "edgeId": 6
+        },
+        {
+          "edgeId": 7
+        },
+        {
+          "edgeId": 8
+        }
+      ]
+    },
+    {
+      "testPathId": 3,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 9
+        }
+      ]
+    },
+    {
+      "testPathId": 4,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 10
+        }
+      ]
+    },
+    {
+      "testPathId": 5,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 11
+        }
+      ]
+    },
+    {
+      "testPathId": 6,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 4
+        },
+        {
+          "edgeId": 5
+        },
+        {
+          "edgeId": 12
+        }
+      ]
+    },
+    {
+      "testPathId": 7,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 4
+        },
+        {
+          "edgeId": 6
+        },
+        {
+          "edgeId": 12
+        }
+      ]
+    },
+    {
+      "testPathId": 8,
+      "values": [
+        {
+          "edgeId": 1
+        },
+        {
+          "edgeId": 2
+        },
+        {
+          "edgeId": 3
+        },
+        {
+          "edgeId": 4
+        },
+        {
+          "edgeId": 5
+        },
+        {
+          "edgeId": 7
+        },
+        {
+          "edgeId": 13
+        }
+      ]
+    }
+  ]
+}

@@ -1,13 +1,12 @@
 package cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import java.time.Duration;
 
-/**
- * Page Object pro stránku pokladny (/order/checkout).
- */
+import org.openqa.selenium.*;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 public class CheckoutPage {
 
     private final WebDriver driver;
@@ -17,7 +16,7 @@ public class CheckoutPage {
     private final By emailField     = By.id("email");
     private final By phoneField     = By.id("phone");
     private final By noteField      = By.id("note");
-    private final By submitButton   = By.cssSelector("button[type=submit]");
+    private final By submitButton   = By.cssSelector("form[action*='/order/checkout'] button[type=submit]");
 
     public CheckoutPage(WebDriver driver) {
         this.driver = driver;
@@ -33,6 +32,7 @@ public class CheckoutPage {
         driver.findElement(emailField).sendKeys(email);
         driver.findElement(phoneField).clear();
         driver.findElement(phoneField).sendKeys(phone);
+        driver.findElement(phoneField).sendKeys(Keys.ESCAPE);
     }
 
     public void setNote(String note) {
@@ -41,10 +41,8 @@ public class CheckoutPage {
     }
 
     public void submit() {
-        WebElement btn = driver.findElement(submitButton);
-        ((JavascriptExecutor) driver).executeScript(
-                "arguments[0].scrollIntoView({block:'center'});", btn);
-        ((JavascriptExecutor) driver).executeScript("arguments[0].click();", btn);
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(ExpectedConditions.presenceOfElementLocated(submitButton));
+        driver.findElement(submitButton).submit();
     }
 
     public String getCurrentUrl() {

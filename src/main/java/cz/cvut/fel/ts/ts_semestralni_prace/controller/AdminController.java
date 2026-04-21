@@ -2,11 +2,20 @@ package cz.cvut.fel.ts.ts_semestralni_prace.controller;
 
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Product;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Shop;
-import cz.cvut.fel.ts.ts_semestralni_prace.service.*;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.CartService;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.OrderService;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.ProductService;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.ShopService;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
@@ -19,8 +28,13 @@ public class AdminController {
     private final CartService cartService;
     private final UserService userService;
 
-    public AdminController(ShopService shopService, ProductService productService,
-                            OrderService orderService, CartService cartService, UserService userService) {
+    public AdminController(
+        ShopService shopService,
+        ProductService productService,
+        OrderService orderService,
+        CartService cartService,
+        UserService userService
+    ) {
         this.shopService = shopService;
         this.productService = productService;
         this.orderService = orderService;
@@ -28,16 +42,23 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping({"", "/"})
+    @GetMapping({ "", "/" })
     public String dashboard(Model model, HttpSession session) {
         model.addAttribute("shopCount", shopService.getAll().size());
         model.addAttribute("productCount", productService.getAll().size());
         model.addAttribute("orderCount", orderService.getAll().size());
         model.addAttribute("userCount", userService.getAll().size());
         model.addAttribute("cartCount", cartService.getItemCount(session));
-        model.addAttribute("recentOrders", orderService.getAll().stream()
+        model.addAttribute(
+            "recentOrders",
+            orderService
+                .getAll()
+                .stream()
                 .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .limit(5).toList());
+                .limit(5)
+                .toList()
+        );
+
         return "admin/dashboard";
     }
 
@@ -58,25 +79,47 @@ public class AdminController {
     }
 
     @GetMapping("/shops/edit/{id}")
-    public String editShop(@PathVariable String id, Model model, HttpSession session) {
-        return shopService.findById(id).map(shop -> {
-            model.addAttribute("shop", shop);
-            model.addAttribute("cartCount", cartService.getItemCount(session));
-            return "admin/shop-form";
-        }).orElse("redirect:/admin/shops");
+    public String editShop(
+        @PathVariable String id,
+        Model model,
+        HttpSession session
+    ) {
+        return shopService
+            .findById(id)
+            .map(shop -> {
+                model.addAttribute("shop", shop);
+                model.addAttribute(
+                    "cartCount",
+                    cartService.getItemCount(session)
+                );
+                return "admin/shop-form";
+            })
+            .orElse("redirect:/admin/shops");
     }
 
     @PostMapping("/shops/save")
-    public String saveShop(@ModelAttribute Shop shop, RedirectAttributes redirectAttributes) {
+    public String saveShop(
+        @ModelAttribute Shop shop,
+        RedirectAttributes redirectAttributes
+    ) {
         shopService.save(shop);
-        redirectAttributes.addFlashAttribute("success", "Zmrzlinárna byla uložena.");
+        redirectAttributes.addFlashAttribute(
+            "success",
+            "Zmrzlinárna byla uložena."
+        );
         return "redirect:/admin/shops";
     }
 
     @PostMapping("/shops/delete/{id}")
-    public String deleteShop(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String deleteShop(
+        @PathVariable String id,
+        RedirectAttributes redirectAttributes
+    ) {
         shopService.delete(id);
-        redirectAttributes.addFlashAttribute("success", "Zmrzlinárna byla smazána.");
+        redirectAttributes.addFlashAttribute(
+            "success",
+            "Zmrzlinárna byla smazána."
+        );
         return "redirect:/admin/shops";
     }
 
@@ -91,8 +134,11 @@ public class AdminController {
     }
 
     @GetMapping("/products/new")
-    public String newProduct(@RequestParam(required = false) String shopId,
-                              Model model, HttpSession session) {
+    public String newProduct(
+        @RequestParam(required = false) String shopId,
+        Model model,
+        HttpSession session
+    ) {
         Product product = new Product();
         if (shopId != null) product.setShopId(shopId);
         model.addAttribute("product", product);
@@ -102,24 +148,40 @@ public class AdminController {
     }
 
     @GetMapping("/products/edit/{id}")
-    public String editProduct(@PathVariable String id, Model model, HttpSession session) {
-        return productService.findById(id).map(product -> {
-            model.addAttribute("product", product);
-            model.addAttribute("shops", shopService.getAll());
-            model.addAttribute("cartCount", cartService.getItemCount(session));
-            return "admin/product-form";
-        }).orElse("redirect:/admin/products");
+    public String editProduct(
+        @PathVariable String id,
+        Model model,
+        HttpSession session
+    ) {
+        return productService
+            .findById(id)
+            .map(product -> {
+                model.addAttribute("product", product);
+                model.addAttribute("shops", shopService.getAll());
+                model.addAttribute(
+                    "cartCount",
+                    cartService.getItemCount(session)
+                );
+                return "admin/product-form";
+            })
+            .orElse("redirect:/admin/products");
     }
 
     @PostMapping("/products/save")
-    public String saveProduct(@ModelAttribute Product product, RedirectAttributes redirectAttributes) {
+    public String saveProduct(
+        @ModelAttribute Product product,
+        RedirectAttributes redirectAttributes
+    ) {
         productService.save(product);
         redirectAttributes.addFlashAttribute("success", "Produkt byl uložen.");
         return "redirect:/admin/products";
     }
 
     @PostMapping("/products/delete/{id}")
-    public String deleteProduct(@PathVariable String id, RedirectAttributes redirectAttributes) {
+    public String deleteProduct(
+        @PathVariable String id,
+        RedirectAttributes redirectAttributes
+    ) {
         productService.delete(id);
         redirectAttributes.addFlashAttribute("success", "Produkt byl smazán.");
         return "redirect:/admin/products";
@@ -129,25 +191,41 @@ public class AdminController {
 
     @GetMapping("/orders")
     public String orders(Model model, HttpSession session) {
-        model.addAttribute("orders", orderService.getAll().stream()
+        model.addAttribute(
+            "orders",
+            orderService
+                .getAll()
+                .stream()
                 .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
-                .toList());
+                .toList()
+        );
         model.addAttribute("cartCount", cartService.getItemCount(session));
         return "admin/orders";
     }
 
     @PostMapping("/orders/status/{id}")
-    public String updateOrderStatus(@PathVariable String id, @RequestParam String status,
-                                     RedirectAttributes redirectAttributes) {
+    public String updateOrderStatus(
+        @PathVariable String id,
+        @RequestParam String status,
+        RedirectAttributes redirectAttributes
+    ) {
         try {
             cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus newStatus =
-                    cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus.valueOf(status);
+                cz.cvut.fel.ts.ts_semestralni_prace.model.OrderStatus.valueOf(
+                    status
+                );
             orderService.updateStatus(id, newStatus);
-            redirectAttributes.addFlashAttribute("success", "Status objednávky byl aktualizován.");
+            redirectAttributes.addFlashAttribute(
+                "success",
+                "Status objednávky byl aktualizován."
+            );
         } catch (IllegalStateException e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", "Neplatný status: " + status);
+            redirectAttributes.addFlashAttribute(
+                "error",
+                "Neplatný status: " + status
+            );
         }
         return "redirect:/admin/orders";
     }

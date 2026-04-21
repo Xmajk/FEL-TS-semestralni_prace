@@ -11,9 +11,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 import java.util.List;
 
-/**
- * Page Object pro konfigurátor zmrzliny (/configurator).
- */
 public class ConfiguratorPage {
 
     private final WebDriver driver;
@@ -33,17 +30,14 @@ public class ConfiguratorPage {
 
     public void open(String baseUrl) {
         driver.get(baseUrl + "/configurator");
-        // Počkat, dokud formulář není přítomen v DOM (stránka se plně načetla)
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.urlContains("configurator"));
     }
 
-    /** Klikne na tlačítko „Přidat kopeček" (čeká se JavaScript inicializace 1. kopečku). */
     public void addScoop() {
         driver.findElement(addScoopBtn).click();
     }
 
-    /** Přidá kopeček a počká, dokud se v DOM neobjeví nový &lt;select&gt;. */
     public void addScoopAndWait() {
         int before = getScoopCount();
         clickViaJs(driver.findElement(addScoopBtn));
@@ -51,7 +45,6 @@ public class ConfiguratorPage {
                 .until(d -> getScoopCount() == before + 1);
     }
 
-    /** Nastaví příchuť kopečku (0-based index) na zadanou hodnotu. */
     public void setScoopFlavor(int scoopIndex, String flavor) {
         List<WebElement> selects = driver.findElements(scoopSelects);
         new Select(selects.get(scoopIndex)).selectByValue(flavor);
@@ -65,13 +58,11 @@ public class ConfiguratorPage {
         clickViaJs(driver.findElement(containerCup));
     }
 
-    /** Zaškrtne posypku podle hodnoty atributu value. */
     public void selectTopping(String topping) {
         String id = "topping-" + topping.replace(" ", "-");
         clickViaJs(driver.findElement(By.id(id)));
     }
 
-    /** Zaškrtne sušenku podle hodnoty atributu value. */
     public void selectCookie(String cookie) {
         String id = "cookie-" + cookie.replace(" ", "-");
         clickViaJs(driver.findElement(By.id(id)));
@@ -82,7 +73,6 @@ public class ConfiguratorPage {
     }
 
     public void submit() {
-        // Explicitní wait – zaručí, že tlačítko je v DOM a klikatelné
         WebElement btn = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(submitButton));
         ((JavascriptExecutor) driver).executeScript(
@@ -102,7 +92,6 @@ public class ConfiguratorPage {
         return driver.findElements(scoopSelects).size();
     }
 
-    /** Klikne na radio / checkbox přes JavaScript – obchází Bootstrap btn-check, které má display:none. */
     private void clickViaJs(WebElement element) {
         ((JavascriptExecutor) driver).executeScript("arguments[0].click();", element);
     }
