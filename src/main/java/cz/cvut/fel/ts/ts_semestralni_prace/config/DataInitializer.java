@@ -3,6 +3,7 @@ package cz.cvut.fel.ts.ts_semestralni_prace.config;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Product;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.Shop;
 import cz.cvut.fel.ts.ts_semestralni_prace.model.User;
+import cz.cvut.fel.ts.ts_semestralni_prace.service.FileStorageService;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.ProductService;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.ShopService;
 import cz.cvut.fel.ts.ts_semestralni_prace.service.UserService;
@@ -21,17 +22,21 @@ public class DataInitializer implements ApplicationRunner {
     private final ProductService productService;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final FileStorageService fileStorageService;
 
     public DataInitializer(ShopService shopService, ProductService productService,
-                            UserService userService, PasswordEncoder passwordEncoder) {
+                            UserService userService, PasswordEncoder passwordEncoder,
+                            FileStorageService fileStorageService) {
         this.shopService = shopService;
         this.productService = productService;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.fileStorageService = fileStorageService;
     }
 
     @Override
     public void run(ApplicationArguments args) {
+        fileStorageService.wipeAllJsonFiles();
         initUsers();
         initShops();
         initProducts();

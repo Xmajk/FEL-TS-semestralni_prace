@@ -1,7 +1,10 @@
 package cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages;
 
+import java.time.Duration;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class CartPage {
 
@@ -21,6 +24,8 @@ public class CartPage {
 
     public void open(String baseUrl) {
         driver.get(baseUrl + "/cart");
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(
+                ExpectedConditions.urlContains("/cart"));
     }
 
     public int getCartItemCount() {
@@ -38,6 +43,8 @@ public class CartPage {
 
     public void clearCart() {
         driver.findElement(clearCartBtn).click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(d -> d.findElements(cartItems).isEmpty());
     }
 
     public String getTotalPriceText() {

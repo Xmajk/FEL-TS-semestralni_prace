@@ -2,12 +2,11 @@ package cz.cvut.fel.ts.ts_semestralni_prace.selenium;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import cz.cvut.fel.ts.ts_semestralni_prace.model.Product;
 import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.CartPage;
 import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.CheckoutPage;
 import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.OrderConfirmationPage;
 import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.ShopDetailPage;
-import cz.cvut.fel.ts.ts_semestralni_prace.service.ProductService;
+import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.ShopDetailPage.ProductInfo;
 import java.time.Duration;
 import java.util.Comparator;
 import java.util.List;
@@ -22,7 +21,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class CreateOrderProcessTests extends SeleniumBaseTest {
@@ -34,9 +32,6 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
     private static final String CUSTOMER_LAST_NAME = "Novák";
     private static final String CUSTOMER_EMAIL = "jan.novak@example.com";
     private static final String CUSTOMER_PHONE = "+420777123456";
-
-    @Autowired
-    private ProductService productService;
 
     private ShopDetailPage shopPage;
     private CartPage cartPage;
@@ -59,12 +54,12 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         "P1 — add same product twice (merge) → checkout → order confirmed"
     )
     void path1_mergeExistingItem_orderConfirmed() {
-        Product product = highStockProduct(SHOP_A);
+        shopPage.open(baseUrl(), SHOP_A);
+        ProductInfo product = highStockProduct();
 
+        shopPage.addProductByName(product.name(), 1);
         shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(product.getName(), 1);
-        shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(product.getName(), 1);
+        shopPage.addProductByName(product.name(), 1);
         submitValidCheckout();
 
         assertThat(confirmationPage.isOnConfirmationPage())
@@ -77,14 +72,14 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
     @Order(2)
     @DisplayName("P2 — add new product → checkout → order confirmed")
     void path2_addNewItem_orderConfirmed() {
-        List<Product> products = availableProducts(SHOP_A);
-        Product productA = products.get(0);
-        Product productB = products.get(1);
+        shopPage.open(baseUrl(), SHOP_A);
+        List<ProductInfo> products = shopPage.getAvailableProducts();
+        ProductInfo productA = products.get(0);
+        ProductInfo productB = products.get(1);
 
+        shopPage.addProductByName(productA.name(), 1);
         shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(productA.getName(), 1);
-        shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(productB.getName(), 1);
+        shopPage.addProductByName(productB.name(), 1);
 
         submitValidCheckout();
 
@@ -114,11 +109,11 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
     @Order(4)
     @DisplayName("P4 — quantity above stock → error \"Nedostatek zásob\"")
     void path4_insufficientStock_redirectsShopWithError() {
-        Product product = highStockProduct(SHOP_A);
-        int overStock = product.getStockQuantity() + 1;
+        shopPage.open(baseUrl(), SHOP_A);
+        ProductInfo product = highStockProduct();
+        int overStock = product.stock() + 1;
 
-        driver.get(baseUrl() + "/shop/" + SHOP_A);
-        postAddToCart(product.getId(), overStock);
+        postAddToCart(product.id(), overStock);
 
         waitForPath("/shop/" + SHOP_A);
         assertThat(flashErrorText())
@@ -133,14 +128,15 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         "P5 — add product from different shop → error \"jiné zmrzlinárny\""
     )
     void path5_differentShop_redirectsShopWithError() {
-        Product productShopA = availableProducts(SHOP_A).get(0);
-        Product productShopB = availableProducts(SHOP_B).get(0);
+        shopPage.open(baseUrl(), SHOP_B);
+        ProductInfo productShopB = shopPage.getAvailableProducts().get(0);
 
         shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(productShopA.getName(), 1);
+        ProductInfo productShopA = shopPage.getAvailableProducts().get(0);
+        shopPage.addProductByName(productShopA.name(), 1);
 
         driver.get(baseUrl() + "/shop/" + SHOP_B);
-        postAddToCart(productShopB.getId(), 1);
+        postAddToCart(productShopB.id(), 1);
 
         waitForPath("/shop/" + SHOP_B);
         assertThat(flashErrorText())
@@ -155,12 +151,12 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         "P6 — merge then clear cart → checkout error \"Košík je prázdný\""
     )
     void path6_mergeThenEmptyCart_checkoutError() {
-        Product product = highStockProduct(SHOP_A);
+        shopPage.open(baseUrl(), SHOP_A);
+        ProductInfo product = highStockProduct();
 
+        shopPage.addProductByName(product.name(), 1);
         shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(product.getName(), 1);
-        shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(product.getName(), 1);
+        shopPage.addProductByName(product.name(), 1);
 
         cartPage.open(baseUrl());
         cartPage.clearCart();
@@ -180,10 +176,10 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         "P7 — add new then clear cart → checkout error \"Košík je prázdný\""
     )
     void path7_addNewThenEmptyCart_checkoutError() {
-        Product product = highStockProduct(SHOP_A);
-
         shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(product.getName(), 1);
+        ProductInfo product = highStockProduct();
+
+        shopPage.addProductByName(product.name(), 1);
 
         cartPage.open(baseUrl());
         cartPage.clearCart();
@@ -203,15 +199,15 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         "P8 — total below 50 Kč → checkout error \"Minimální hodnota\""
     )
     void path8_totalBelowMinimum_checkoutError() {
-        Product cheapest = cheapestAvailableProduct(SHOP_A);
-        assertThat(cheapest.getPrice().intValue())
+        shopPage.open(baseUrl(), SHOP_A);
+        ProductInfo cheapest = cheapestAvailableProduct();
+        assertThat(cheapest.price())
             .as(
                 "Precondition: cheapest product must stay below the 50 Kč minimum"
             )
             .isLessThan(50);
 
-        shopPage.open(baseUrl(), SHOP_A);
-        shopPage.addProductByName(cheapest.getName(), 1);
+        shopPage.addProductByName(cheapest.name(), 1);
 
         driver.get(baseUrl() + "/order/checkout");
         fillValidCustomerDetails();
@@ -282,31 +278,19 @@ class CreateOrderProcessTests extends SeleniumBaseTest {
         return errors.isEmpty() ? "" : errors.get(0).getText();
     }
 
-    private Product highStockProduct(String shopId) {
-        return availableProducts(shopId)
-            .stream()
-            .max(Comparator.comparingInt(Product::getStockQuantity))
+    private ProductInfo highStockProduct() {
+        return shopPage.getAvailableProducts().stream()
+            .max(Comparator.comparingInt(ProductInfo::stock))
             .orElseThrow(() ->
-                new IllegalStateException("No products in shop " + shopId)
+                new IllegalStateException("No available products on shop page")
             );
     }
 
-    private Product cheapestAvailableProduct(String shopId) {
-        return availableProducts(shopId)
-            .stream()
-            .min(Comparator.comparing(Product::getPrice))
+    private ProductInfo cheapestAvailableProduct() {
+        return shopPage.getAvailableProducts().stream()
+            .min(Comparator.comparingDouble(ProductInfo::price))
             .orElseThrow(() ->
-                new IllegalStateException("No products in shop " + shopId)
+                new IllegalStateException("No available products on shop page")
             );
-    }
-
-    private List<Product> availableProducts(String shopId) {
-        return productService
-            .getAll()
-            .stream()
-            .filter(p -> shopId.equals(p.getShopId()))
-            .filter(Product::isAvailable)
-            .filter(p -> p.getStockQuantity() > 0)
-            .toList();
     }
 }

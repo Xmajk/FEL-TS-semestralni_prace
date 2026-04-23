@@ -38,6 +38,15 @@ public class FileStorageService {
         }
     }
 
+    public void wipeAllJsonFiles() {
+        File dir = new File(dataDir);
+        File[] files = dir.listFiles((d, name) -> name.endsWith(".json"));
+        if (files == null) return;
+        for (File f : files) {
+            f.delete();
+        }
+    }
+
     public <T> void writeList(String filename, List<T> data) {
         try {
             objectMapper

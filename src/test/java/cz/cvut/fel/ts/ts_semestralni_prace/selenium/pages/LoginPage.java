@@ -7,9 +7,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-/**
- * Page Object pro přihlašovací stránku (/login).
- */
 public class LoginPage {
 
     private final WebDriver driver;

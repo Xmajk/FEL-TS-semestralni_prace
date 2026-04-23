@@ -9,9 +9,12 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShopDetailPage {
+
+    public record ProductInfo(String id, String name, double price, int stock) {}
 
     private final WebDriver driver;
 
@@ -27,6 +30,13 @@ public class ShopDetailPage {
         driver.get(baseUrl + "/shop/" + shopId);
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.urlContains("/shop/" + shopId));
+        waitForProductsRendered();
+    }
+
+    private void waitForProductsRendered() {
+        new WebDriverWait(driver, Duration.ofSeconds(10)).until(d ->
+                !d.findElements(productCards).isEmpty()
+                        || !d.findElements(By.cssSelector(".text-center.py-5")).isEmpty());
     }
 
     public void addProductByName(String productName, int quantity) {
@@ -70,6 +80,28 @@ public class ShopDetailPage {
     public boolean hasCrossShopLockIcon(String productName) {
         WebElement card = findCardByName(productName);
         return !card.findElements(By.cssSelector("i.bi-lock")).isEmpty();
+    }
+
+    public List<ProductInfo> getAvailableProducts() {
+        waitForProductsRendered();
+        List<ProductInfo> result = new ArrayList<>();
+        for (WebElement card : driver.findElements(productCards)) {
+            List<WebElement> forms = card.findElements(By.cssSelector("form[action*='/cart/add/']"));
+            if (forms.isEmpty()) continue;
+            WebElement form = forms.get(0);
+            String action = form.getAttribute("action");
+            String id = action.substring(action.lastIndexOf('/') + 1);
+            String name = card.findElement(By.cssSelector(".card-title")).getText().trim();
+            double price = parsePrice(card.findElement(By.cssSelector(".text-ice.fs-5")).getText());
+            int stock = Integer.parseInt(form.findElement(By.name("quantity")).getAttribute("max"));
+            result.add(new ProductInfo(id, name, price, stock));
+        }
+        return result;
+    }
+
+    private static double parsePrice(String text) {
+        String digits = text.replace("Kč", "").replace(" ", "").replace(" ", "").replace(",", ".").trim();
+        return Double.parseDouble(digits);
     }
 
     private WebElement findCardByName(String productName) {

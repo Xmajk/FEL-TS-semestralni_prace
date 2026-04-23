@@ -1,6 +1,8 @@
 package cz.cvut.fel.ts.ts_semestralni_prace.selenium;
 
 import cz.cvut.fel.ts.ts_semestralni_prace.selenium.pages.LoginPage;
+
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.AfterEach;
@@ -45,7 +47,9 @@ public abstract class SeleniumBaseTest {
             "excludeSwitches",
             new String[] { "enable-automation" }
         );
+
         driver = new ChromeDriver(options);
+        driver.manage().timeouts().implicitlyWait(Duration.ofMillis(100));
 
         this.loginPage = new LoginPage(driver);
     }
@@ -60,9 +64,6 @@ public abstract class SeleniumBaseTest {
     protected void loginAs(String username, String password) {
         this.loginPage.open(this.baseUrl());
         this.loginPage.loginAs(username, password);
-        //try {
-        //    this.driver.wait(1_000);
-        //}catch (Exception e){}
     }
 
     protected void loginAsAdmin() {
