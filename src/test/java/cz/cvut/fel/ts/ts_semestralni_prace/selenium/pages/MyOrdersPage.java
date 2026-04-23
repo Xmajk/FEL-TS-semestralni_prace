@@ -41,10 +41,16 @@ public class MyOrdersPage {
     }
 
     public void cancelFirstOrder() {
-        ((JavascriptExecutor) driver).executeScript("window.confirm = () => true;");
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("window.confirm = () => true;");
         WebElement btn = new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(cancelBtn));
-        btn.click();
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", btn);
+        try {
+            btn.click();
+        } catch (org.openqa.selenium.ElementClickInterceptedException e) {
+            js.executeScript("arguments[0].click();", btn);
+        }
     }
 
     public boolean isSuccessDisplayed() {
